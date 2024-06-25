@@ -98,6 +98,7 @@
     <input type="text" id="delimiter" name="delimiter" placeholder=",">
     <br>
     <button onclick="generateRandomStrings()">Generate</button>
+    <button onclick="downloadAsTxt()">Download as .txt</button>
     <div id="outputList"></div>
 
     <script>
@@ -143,6 +144,7 @@
             outputList.innerHTML = '';
 
             const regex = /\[(%|<>|{}|@|\?|~|\+|_|\(|\)|\*|\^|&|\$|£|¬)(\(\d+-\d+\))?\]/g;
+            let allStrings = [];
 
             for (let i = 0; i < numStrings; i++) {
                 let generatedString = customTemplate.replace(regex, (match, symbol, range) => {
@@ -175,10 +177,22 @@
                     }
                 });
 
+                allStrings.push(generatedString);
                 const stringItem = document.createElement('p');
                 stringItem.textContent = generatedString;
                 outputList.appendChild(stringItem);
             }
+
+            return allStrings;
+        }
+
+        function downloadAsTxt() {
+            const allStrings = generateRandomStrings();
+            const blob = new Blob([allStrings.join('\n')], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'random_strings.txt';
+            link.click();
         }
     </script>
 </body>
