@@ -73,11 +73,10 @@
         <textarea id="customRightParen" name="customRightParen" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
 
-    <label for="delimiter">
     <label for="delimiter">Delimiter:</label>
     <input type="text" id="delimiter" name="delimiter" placeholder=","> <br>
 
-    <label for="lengthRange">Length range (e.g., 1-9):</label>
+    <label for="lengthRange">Length range (e.g., 1-9). Add ¬ after the symbol for random length:</label>
     <input type="text" id="lengthRange" name="lengthRange" placeholder="1-9"> <br>
 
     <button onclick="generateRandomStrings()">Generate</button>
@@ -128,18 +127,18 @@
 
             for (let i = 0; i < numStrings; i++) {
                 let generatedString = customTemplate
-                    .replace(/%+/g, match => getRandomString(getRandomLength(minLength, maxLength)))
-                    .replace(/£+/g, match => getRandomString(getRandomLength(minLength, maxLength), customChars))
-                    .replace(/!+/g, match => getRandomString(getRandomLength(minLength, maxLength), customExclamation))
-                    .replace(/"+/g, match => getRandomString(getRandomLength(minLength, maxLength), customQuotes))
-                    .replace(/£+/g, match => getRandomString(getRandomLength(minLength, maxLength), customPound))
-                    .replace(/\$+/g, match => getRandomString(getRandomLength(minLength, maxLength), customDollar))
-                    .replace(/%+/g, match => getRandomString(getRandomLength(minLength, maxLength), customPercent))
-                    .replace(/\^+/g, match => getRandomString(getRandomLength(minLength, maxLength), customCaret))
-                    .replace(/&+/g, match => getRandomString(getRandomLength(minLength, maxLength), customAmpersand))
-                    .replace(/\*+/g, match => getRandomString(getRandomLength(minLength, maxLength), customAsterisk))
-                    .replace(/\(+/g, match => getRandomString(getRandomLength(minLength, maxLength), customLeftParen))
-                    .replace(/\)+/g, match => getRandomString(getRandomLength(minLength, maxLength), customRightParen));
+                    .replace(/%+¬/g, match => getRandomString(getRandomLength(minLength, maxLength)))
+                    .replace(/£+¬/g, match => getRandomString(getRandomLength(minLength, maxLength), customChars))
+                    .replace(/!+¬/g, match => getRandomString(getRandomLength(minLength, maxLength), customExclamation))
+                    .replace(/"+¬/g, match => getRandomString(getRandomLength(minLength, maxLength), customQuotes))
+                    .replace(/£+¬/g, match => getRandomString(getRandomLength(minLength, maxLength), customPound))
+                    .replace(/\$+¬/g, match => getRandomString(getRandomLength(minLength, maxLength), customDollar))
+                    .replace(/%+¬/g, match => getRandomString(getRandomLength(minLength, maxLength), customPercent))
+                    .replace(/\^+¬/g, match => getRandomString(getRandomLength(minLength, maxLength), customCaret))
+                    .replace(/&+¬/g, match => getRandomString(getRandomLength(minLength, maxLength), customAmpersand))
+                    .replace(/\*+¬/g, match => getRandomString(getRandomLength(minLength, maxLength), customAsterisk))
+                    .replace(/\(+¬/g, match => getRandomString(getRandomLength(minLength, maxLength), customLeftParen))
+                    .replace(/\)+¬/g, match => getRandomString(getRandomLength(minLength, maxLength), customRightParen));
 
                 const stringItem = document.createElement('p');
                 stringItem.textContent = generatedString;
