@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Random String Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        #outputList {
+            text-align: left;
+            margin: 20px auto;
+            width: 50%;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        button {
+            margin: 10px;
+        }
+        .customCharsContainer {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Random String Generator</h1>
+    <label for="numStrings">Number of strings to generate:</label>
+    <input type="number" id="numStrings" name="numStrings" min="1" max="1000" value="1">
+    <br>
+    <label for="customTemplate">Custom template (use % for random values, £ for custom characters, etc.):</label>
+    <input type="text" id="customTemplate" name="customTemplate" placeholder="prefix-%%%%%-£££££-suffix">
+    <br>
+    <div class="customCharsContainer">
+        <label for="customChars">Custom characters for £ (one per line):</label>
+        <textarea id="customChars" name="customChars" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+    </div>
+    <div class="customCharsContainer">
+        <label for="customExclamation">Custom characters for ! (one per line):</label>
+        <textarea id="customExclamation" name="customExclamation" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+    </div>
+    <div class="customCharsContainer">
+        <label for="customQuotes">Custom characters for " (one per line):</label>
+        <textarea id="customQuotes" name="customQuotes" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+    </div>
+    <div class="customCharsContainer">
+        <label for="customPound">Custom characters for £ (one per line):</label>
+        <textarea id="customPound" name="customPound" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+    </div>
+    <div class="customCharsContainer">
+        <label for="customDollar">Custom characters for $ (one per line):</label>
+        <textarea id="customDollar" name="customDollar" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+    </div>
+    <div class="customCharsContainer">
+        <label for="customPercent">Custom characters for % (one per line):</label>
+        <textarea id="customPercent" name="customPercent" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+    </div>
+    <div class="customCharsContainer">
+        <label for="customCaret">Custom characters for ^ (one per line):</label>
+        <textarea id="customCaret" name="customCaret" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+    </div>
+    <div class="customCharsContainer">
+        <label for="customAmpersand">Custom characters for & (one per line):</label>
+        <textarea id="customAmpersand" name="customAmpersand" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+    </div>
+    <div class="customCharsContainer">
+        <label for="customAsterisk">Custom characters for * (one per line):</label>
+        <textarea id="customAsterisk" name="customAsterisk" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+    </div>
+    <div class="customCharsContainer">
+        <label for="customLeftParen">Custom characters for ( (one per line):</label>
+        <textarea id="customLeftParen" name="customLeftParen" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+    </div>
+    <div class="customCharsContainer">
+        <label for="customRightParen">Custom characters for ) (one per line):</label>
+        <textarea id="customRightParen" name="customRightParen" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+    </div>
+    <label for="delimiter">Delimiter:</label>
+    <input type="text" id="delimiter" name="delimiter" placeholder=",">
+    <br>
+    <label for="randomLength">Random length for each part:</label>
+    <input type="checkbox" id="randomLength" name="randomLength">
+    <br>
+    <button onclick="generateRandomStrings()">Generate</button>
+    <div id="outputList"></div>
+
+    <script>
+        function getRandomString(length, customChars = 'abcdefghijklmnopqrstuvwxyz0123456789') {
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += customChars.charAt(Math.floor(Math.random() * customChars.length));
+            }
+            return result;
+        }
+
+        function getCustomChars(id) {
+            const customChars = document.getElementById(id).value.split('\n').join('');
+            return customChars || 'abcdefghijklmnopqrstuvwxyz0123456789';
+        }
+
+        function generateRandomStrings() {
+            const numStrings = document.getElementById('numStrings').value;
+            const customTemplate = document.getElementById('customTemplate').value;
+            const customChars = getCustomChars('customChars');
+            const customExclamation = getCustomChars('customExclamation');
+            const customQuotes = getCustomChars('customQuotes');
+            const customPound = getCustomChars('customPound');
+            const customDollar = getCustomChars('customDollar');
+            const customPercent = getCustomChars('customPercent');
+            const customCaret = getCustomChars('customCaret');
+            const customAmpersand = getCustomChars('customAmpersand');
+            const customAsterisk = getCustomChars('customAsterisk');
+            const customLeftParen = getCustomChars('customLeftParen');
+            const customRightParen = getCustomChars('customRightParen');
+            const delimiter = document.getElementById('delimiter').value || '';
+            const randomLength = document.getElementById('randomLength').checked;
+            const outputList = document.getElementById('outputList');
+            outputList.innerHTML = '';
+
+            for (let i = 0; i < numStrings; i++) {
+                let generatedString = customTemplate.replace(/%+/g, match => getRandomString(randomLength ? Math.floor(Math.random() * match.length) + 1 : match.length))
+                    .replace(/£+/g, match => getRandomString(randomLength ? Math.floor(Math.random() * match.length) + 1 : match.length, customChars))
+                    .replace(/!+/g, match => getRandomString(randomLength ? Math.floor(Math.random() * match.length) + 1 : match.length, customExclamation))
+                    .replace(/"+/g, match => getRandomString(randomLength ? Math.floor(Math.random() * match.length) + 1 : match.length, customQuotes))
+                    .replace(/£+/g, match => getRandomString(randomLength ? Math.floor(Math.random() * match.length) + 1 : match.length, customPound))
+                    .replace(/\$+/g, match => getRandomString(randomLength ? Math.floor(Math.random() * match.length) + 1 : match.length, customDollar))
+                    .replace(/%+/g, match => getRandomString(randomLength ? Math.floor(Math.random() * match.length) + 1 : match.length, customPercent))
+                    .replace(/\^+/g, match => getRandomString(randomLength ? Math.floor(Math.random() * match.length) + 1 : match.length, customCaret))
+                    .replace(/&+/g, match => getRandomString(randomLength ? Math.floor(Math.random() * match.length) + 1 : match.length, customAmpersand))
+                    .replace(/\*+/g, match => getRandomString(randomLength ? Math.floor(Math.random() * match.length) + 1 : match.length, customAsterisk))
+                    .replace(/\(+/g, match => getRandomString(randomLength ? Math.floor(Math.random() * match.length) + 1 : match.length, customLeftParen))
+                    .replace(/\)+/g, match => getRandomString(randomLength ? Math.floor(Math.random() * match.length) + 1 : match.length, customRightParen));
+
+                const stringItem = document.createElement('p');
+                stringItem.textContent = generatedString;
+                outputList.appendChild(stringItem);
+            }
+        }
+    </script>
+</body>
+</html>
