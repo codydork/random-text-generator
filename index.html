@@ -8,100 +8,50 @@
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 20px;
+            background-color: #f0f0f0;
         }
         #outputList {
             text-align: left;
             margin: 20px auto;
-            width: 50%;
+            width: 70%;
             border: 1px solid #ccc;
             padding: 10px;
             border-radius: 5px;
-            background-color: #f9f9f9;
+            background-color: #fff;
         }
         button {
             margin: 10px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
         }
         .customCharsContainer {
             margin-top: 10px;
+        }
+        .customCharsContainer textarea {
+            width: calc(100% - 22px);
+        }
+        .section {
+            text-align: left;
+            margin: 20px auto;
+            width: 70%;
+            border: 1px solid #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #fff;
         }
     </style>
 </head>
 <body>
     <h1>Random String Generator</h1>
-    <h2>Comprehensive Guide for Random String Generator</h2>
-<div id="guide" style="text-align: left; margin: 20px auto; width: 70%; border: 1px solid #ccc; padding: 15px; border-radius: 5px; background-color: #f9f9f9;">
-    <p>
-        Welcome to the Random String Generator! This tool allows you to create custom random strings based on your specifications. Here's a guide to help you understand how to use all the features and options:
-    </p>
-    <h3>1. Number of Strings</h3>
-    <p>
-        <strong>Number of strings to generate:</strong> Enter the number of random strings you want to generate in the input box labeled "Number of strings to generate". You can generate up to 1000 strings at a time.
-    </p>
-
-    <h3>2. Custom Template</h3>
-    <p>
-        <strong>Custom template:</strong> Use the input box labeled "Custom template" to define the structure of your random strings. You can include various symbols to represent different types of characters:
-    </p>
-    <ul>
-        <li><code>%</code>: Random characters from the default set (a-z, 0-9).</li>
-        <li><code>&lt;&gt;</code>: Random characters from the custom set defined for &lt;&gt;.</li>
-        <li><code>{}</code>: Random characters from the custom set defined for {}.</li>
-        <li><code>@</code>: Random characters from the custom set defined for @.</li>
-        <li><code>?</code>: Random characters from the custom set defined for ?.</li>
-        <li><code>~</code>: Random characters from the custom set defined for ~.</li>
-        <li><code>+</code>: Random characters from the custom set defined for +.</li>
-        <li><code>_</code>: Random characters from the custom set defined for _.</li>
-        <li><code>()</code>: Random characters from the custom set defined for ().</li>
-        <li><code>*</code>: Random characters from the custom set defined for *.</li>
-        <li><code>^</code>: Random characters from the custom set defined for ^.</li>
-        <li><code>&</code>: Random characters from the custom set defined for &.</li>
-        <li><code>$</code>: Random characters from the custom set defined for $.</li>
-        <li><code>£</code>: Random characters from the custom set defined for £.</li>
-        <li><code>¬</code>: Random characters from the custom set defined for ¬.</li>
-    </ul>
-    <p>
-        You can specify a fixed length by repeating the symbol (e.g., <code>%%%<code> for 3 random characters). To specify a range of lengths, use the format <code>[symbol(min-max)]</code> (e.g., <code>[%](3-5)</code> for 3 to 5 random characters).
-    </p>
-
-    <h3>3. Custom Characters</h3>
-    <p>
-        For each symbol, you can define custom characters by entering them one per line in the respective text areas. For example, for <code>%</code>, you can enter:
-    </p>
-    <pre>
-a
-b
-c
-1
-2
-3
-    </pre>
-    <p>
-        This will make the generator use only these characters for the <code>%</code> symbol.
-    </p>
-
-    <h3>4. Delimiter</h3>
-    <p>
-        <strong>Delimiter:</strong> Enter a character or string to separate each generated random string. For example, if you enter a comma, the output strings will be separated by commas.
-    </p>
-
-    <h3>5. Generate and Download</h3>
-    <p>
-        <strong>Generate:</strong> Click the "Generate" button to create the random strings based on your template and options.
-    </p>
-    <p>
-        <strong>Download as .txt:</strong> Click the "Download as .txt" button to download the generated strings as a text file.
-    </p>
-
-    <h3>Examples</h3>
-    <p>
-        Here are a few examples of custom templates:
-    </p>
-    <ul>
-        <li><code>prefix-%(3-5)-suffix</code>: Generates a string with "prefix-", followed by 3 to 5 random characters, and ending with "-suffix".</li>
-        <li><code>[%(5)]</code>: Generates a string with 5 random characters.</li>
-        <li><code>[£(2-4)]@[?(3)]</code>: Generates a string with 2 to 4 random £ characters, followed by "@", and then 3 random ? characters.</li>
-    </ul>
-</div>
+    <h2>Please read the guide at the bottom of the page before doing anything</h2>
+    
     <label for="numStrings">Number of strings to generate:</label>
     <input type="number" id="numStrings" name="numStrings" min="1" max="1000" value="1">
     <br>
@@ -110,63 +60,63 @@ c
     <br>
     <div class="customCharsContainer">
         <label for="customChars">Custom characters for % (one per line):</label>
-        <textarea id="customChars" name="customChars" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customChars" name="customChars" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customAngleBrackets">Custom characters for <> (one per line):</label>
-        <textarea id="customAngleBrackets" name="customAngleBrackets" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customAngleBrackets" name="customAngleBrackets" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customCurlyBraces">Custom characters for {} (one per line):</label>
-        <textarea id="customCurlyBraces" name="customCurlyBraces" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customCurlyBraces" name="customCurlyBraces" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customAtSymbol">Custom characters for @ (one per line):</label>
-        <textarea id="customAtSymbol" name="customAtSymbol" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customAtSymbol" name="customAtSymbol" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customQuestionMark">Custom characters for ? (one per line):</label>
-        <textarea id="customQuestionMark" name="customQuestionMark" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customQuestionMark" name="customQuestionMark" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customTilde">Custom characters for ~ (one per line):</label>
-        <textarea id="customTilde" name="customTilde" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customTilde" name="customTilde" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customPlus">Custom characters for + (one per line):</label>
-        <textarea id="customPlus" name="customPlus" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customPlus" name="customPlus" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customUnderscore">Custom characters for _ (one per line):</label>
-        <textarea id="customUnderscore" name="customUnderscore" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customUnderscore" name="customUnderscore" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customParentheses">Custom characters for () (one per line):</label>
-        <textarea id="customParentheses" name="customParentheses" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customParentheses" name="customParentheses" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customAsterisk">Custom characters for * (one per line):</label>
-        <textarea id="customAsterisk" name="customAsterisk" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customAsterisk" name="customAsterisk" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customCaret">Custom characters for ^ (one per line):</label>
-        <textarea id="customCaret" name="customCaret" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customCaret" name="customCaret" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customAmpersand">Custom characters for & (one per line):</label>
-        <textarea id="customAmpersand" name="customAmpersand" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customAmpersand" name="customAmpersand" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customDollar">Custom characters for $ (one per line):</label>
-        <textarea id="customDollar" name="customDollar" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customDollar" name="customDollar" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customPound">Custom characters for £ (one per line):</label>
-        <textarea id="customPound" name="customPound" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customPound" name="customPound" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <div class="customCharsContainer">
         <label for="customNot">Custom characters for ¬ (one per line):</label>
-        <textarea id="customNot" name="customNot" rows="5" cols="20" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        <textarea id="customNot" name="customNot" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
     </div>
     <label for="delimiter">Delimiter:</label>
     <input type="text" id="delimiter" name="delimiter" placeholder=",">
@@ -174,6 +124,81 @@ c
     <button onclick="generateRandomStrings()">Generate</button>
     <button onclick="downloadAsTxt()">Download as .txt</button>
     <div id="outputList"></div>
+
+    <div id="guide" class="section">
+        <h2>Comprehensive Guide for Random String Generator</h2>
+        <p>
+            Welcome to the Random String Generator! This tool allows you to create custom random strings based on your specifications. Here's a guide to help you understand how to use all the features and options:
+        </p>
+        <h3>1. Number of Strings</h3>
+        <p>
+            <strong>Number of strings to generate:</strong> Enter the number of random strings you want to generate in the input box labeled "Number of strings to generate". You can generate up to 1000 strings at a time.
+        </p>
+
+        <h3>2. Custom Template</h3>
+        <p>
+            <strong>Custom template:</strong> Use the input box labeled "Custom template" to define the structure of your random strings. You can include various symbols to represent different types of characters:
+        </p>
+        <ul>
+            <li><code>%</code>: Random characters from the default set (a-z, 0-9).</li>
+            <li><code>&lt;&gt;</code>: Random characters from the custom set defined for &lt;&gt;.</li>
+            <li><code>{}</code>: Random characters from the custom set defined for {}.</li>
+            <li><code>@</code>: Random characters from the custom set defined for @.</li>
+            <li><code>?</code>: Random characters from the custom set defined for ?.</li>
+            <li><code>~</code>: Random characters from the custom set defined for ~.</li>
+            <li><code>+</code>: Random characters from the custom set defined for +.</li>
+            <li><code>_</code>: Random characters from the custom set defined for _.</li>
+            <li><code>()</code>: Random characters from the custom set defined for ().</li>
+            <li><code>*</code>: Random characters from the custom set defined for *.</li>
+            <li><code>^</code>: Random characters from the custom set defined for ^.</li>
+            <li><code>&</code>: Random characters from the custom set defined for &.</li>
+            <li><code>$</code>: Random characters from the custom set defined for $.</li>
+            <li><code>£</code>: Random characters from the custom set defined for £.</li>
+            <li><code>¬</code>: Random characters from the custom set defined for ¬.</li>
+        </ul>
+        <p>
+            You can specify a fixed length by repeating the symbol (e.g., <code>%%%<code> for 3 random characters). To specify a range of lengths, use the format <code>[symbol(min-max)]</code> (e.g., <code>[%](3-5)</code> for 3 to 5 random characters).
+        </p>
+
+        <h3>3. Custom Characters</h3>
+        <p>
+            For each symbol, you can define custom characters by entering them one per line in the respective text areas. For example, for <code>%</code>, you can enter:
+        </p>
+        <pre>
+a
+b
+c
+1
+2
+3
+        </pre>
+        <p>
+            This will make the generator use only these characters for the <code>%</code> symbol.
+        </p>
+
+        <h3>4. Delimiter</h3>
+        <p>
+            <strong>Delimiter:</strong> Enter a character or string to separate each generated random string. For example, if you enter a comma, the output strings will be separated by commas.
+        </p>
+
+        <h3>5. Generate and Download</h3>
+        <p>
+            <strong>Generate:</strong> Click the "Generate" button to create the random strings based on your template and options.
+        </p>
+        <p>
+            <strong>Download as .txt:</strong> Click the "Download as .txt" button to download the generated strings as a text file.
+        </p>
+
+        <h3>Examples</h3>
+        <p>
+            Here are a few examples of custom templates:
+        </p>
+        <ul>
+            <li><code>prefix-%(3-5)-suffix</code>: Generates a string with "prefix-", followed by 3 to 5 random characters, and ending with "-suffix".</li>
+            <li><code>[%(5)]</code>: Generates a string with 5 random characters.</li>
+            <li><code>[£(2-4)]@[?(3)]</code>: Generates a string with 2 to 4 random £ characters, followed by "@", and then 3 random ? characters.</li>
+        </ul>
+    </div>
 
     <script>
         function getRandomString(length, customChars = 'abcdefghijklmnopqrstuvwxyz0123456789') {
@@ -270,4 +295,6 @@ c
         }
     </script>
 </body>
-</html>
+            </html>
+
+                
