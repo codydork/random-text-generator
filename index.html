@@ -137,15 +137,15 @@
     <div id="guide">
         <p>
             **Instructions for using the preset menu:**
-            1. There should be 20 presets that you can save or load.
-            2. The menu should be scrollable.
+            1. There is 20 presets that you can save or load.
             3. Click on one of the presets (e.g., Preset 1) and press save to save all the characters that are in the text inputs for the symbols.
-            4. When you press that preset and it loads all the characters in the preset.
-            5. When a preset has all the characters, it should have (FULL) beside the preset name.
+            4. When you press that preset it loads all the characters in the preset.
+            5. When a preset has all the characters, it will have (FULL) beside the preset name.
         </p>
     </div>
 
     <div id="result"></div>
+    <a id="downloadLink" style="display:none">Download Result</a>
 
     <script>
         const presets = Array(20).fill(null);
@@ -212,14 +212,13 @@
             document.getElementById('customAsterisk').value = preset.customAsterisk;
             document.getElementById('customCaret').value = preset.customCaret;
             document.getElementById('customAmpersand').value = preset.customAmpersand;
-            document.getElementById('customDollar')..value = preset.customDollar;
+            document.getElementById('customDollar').value = preset.customDollar;
             document.getElementById('customPound').value = preset.customPound;
             document.getElementById('customNot').value = preset.customNot;
 
             // Check if any field has characters for this preset
             const hasCharacters = Object.values(preset).some(value => value !== 'abcdefghijklmnopqrstuvwxyz0123456789');
 
-            const selectedPreset = document.querySelector('#presetList li.selected');
             if (hasCharacters) {
                 selectedPreset.textContent = `Preset ${index + 1} (FULL)`;
             } else {
@@ -279,9 +278,24 @@
                 }
             }
 
-            document.getElementById('result').textContent = result;
+            // Handling output based on number of strings
+            const numStrings = template.length;
+            if (numStrings > 9999) {
+                saveResultToFile(result);
+            } else {
+                document.getElementById('result').textContent = result;
+            }
+        }
+
+        function saveResultToFile(result) {
+            const blob = new Blob([result], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.getElementById('downloadLink');
+            a.href = url;
+            a.download = 'result.txt';
+            a.style.display = 'block';
+            a.textContent = 'Download Result';
         }
     </script>
 </body>
 </html>
-
