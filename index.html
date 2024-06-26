@@ -2,196 +2,240 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Random String Generator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-            background-color: #f0f0f0;
+            margin: 20px;
         }
-        #outputList {
-            text-align: left;
-            margin: 20px auto;
-            width: 70%;
+        form {
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 300px;
+            height: 50px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        #result {
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        #presetMenu {
             border: 1px solid #ccc;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #fff;
+            width: 300px;
+            height: 150px;
+            overflow-y: scroll;
+            margin-bottom: 20px;
         }
-        button {
-            margin: 10px;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
+        #presetMenu ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        #presetMenu li {
+            padding: 5px;
+            border-bottom: 1px solid #ccc;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #0056b3;
+        #presetMenu li:hover {
+            background-color: #f0f0f0;
         }
-        .customCharsContainer {
-            margin-top: 10px;
+        #presetMenu button {
+            width: 50%;
+            padding: 10px;
+            margin: 10px 0;
+            cursor: pointer;
         }
-        .customCharsContainer textarea {
-            width: calc(100% - 22px);
-        }
-        .section {
-            text-align: left;
-            margin: 20px auto;
-            width: 70%;
-            border: 1px solid #ccc;
-            padding: 15px;
-            border-radius: 5px;
-            background-color: #fff;
+        #presetMenu div {
+            display: flex;
+            justify-content: space-between;
         }
     </style>
 </head>
 <body>
     <h1>Random String Generator</h1>
-    <h2>Please read the guide at the bottom of the page before doing anything</h2>
-    
-    <label for="numStrings">Number of strings to generate:</label>
-    <input type="number" id="numStrings" name="numStrings" min="1" max="1000" value="1">
-    <br>
-    <label for="customTemplate">Custom template (use % for random values, each special character for custom characters):</label>
-    <input type="text" id="customTemplate" name="customTemplate" placeholder="prefix-%%%%%-£££££-suffix">
-    <br>
-    <div class="customCharsContainer">
-        <label for="customChars">Custom characters for % (one per line):</label>
-        <textarea id="customChars" name="customChars" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
-    </div>
-    <div class="customCharsContainer">
-        <label for="customTilde">Custom characters for ~ (one per line):</label>
-        <textarea id="customTilde" name="customTilde" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
-    </div>
-    <div class="customCharsContainer">
-        <label for="customBackslash">Custom characters for \ (one per line):</label>
-        <textarea id="customBackslash" name="customBackslash" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
-    </div>
-    <div class="customCharsContainer">
-        <label for="customPipe">Custom characters for | (one per line):</label>
-        <textarea id="customPipe" name="customPipe" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
-    </div>
-    <div class="customCharsContainer">
-        <label for="customHash">Custom characters for # (one per line):</label>
-        <textarea id="customHash" name="customHash" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
-    </div>
-    <div class="customCharsContainer">
-        <label for="customDot">Custom characters for . (one per line):</label>
-        <textarea id="customDot" name="customDot" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
-    </div>
-    <div class="customCharsContainer">
-        <label for="customComma">Custom characters for , (one per line):</label>
-        <textarea id="customComma" name="customComma" rows="5" placeholder="a\nb\nc\n1\n2\n3"></textarea>
-    </div>
-    <label for="delimiter">Delimiter:</label>
-    <input type="text" id="delimiter" name="delimiter" placeholder=",">
-    <br>
-    <button onclick="generateRandomStrings()">Generate</button>
-    <button onclick="downloadAsTxt()">Download as .txt</button>
-    <div id="outputList"></div>
+    <p>Use the form below to generate random strings based on a custom template.</p>
 
-    <div id="guide" class="section">
-        <h2>Comprehensive Guide for Random String Generator</h2>
-        <p>
-            Welcome to the Random String Generator! This tool allows you to create custom random strings based on your specifications. Here's a guide to help you understand how to use all the features and options:
-        </p>
-        <h3>1. Number of Strings</h3>
-        <p>
-            <strong>Number of strings to generate:</strong> Enter the number of random strings you want to generate in the input box labeled "Number of strings to generate". You can generate up to 1000 strings at a time.
-        </p>
+    <form id="generatorForm">
+        <label for="template">Template:</label>
+        <textarea id="template"></textarea>
+        <label for="customChars">Custom Characters (a-z, 0-9):</label>
+        <textarea id="customChars"></textarea>
+        <label for="customTilde">Custom Characters (~):</label>
+        <textarea id="customTilde"></textarea>
+        <label for="customBackslash">Custom Characters (\\):</label>
+        <textarea id="customBackslash"></textarea>
+        <label for="customPipe">Custom Characters (|):</label>
+        <textarea id="customPipe"></textarea>
+        <label for="customHash">Custom Characters (#):</label>
+        <textarea id="customHash"></textarea>
+        <label for="customDot">Custom Characters (.):</label>
+        <textarea id="customDot"></textarea>
+        <label for="customComma">Custom Characters (,):</label>
+        <textarea id="customComma"></textarea>
+        <label for="customAtSymbol">Custom Characters (@):</label>
+        <textarea id="customAtSymbol"></textarea>
+        <label for="customQuestionMark">Custom Characters (?):</label>
+        <textarea id="customQuestionMark"></textarea>
+        <label for="customPlus">Custom Characters (+):</label>
+        <textarea id="customPlus"></textarea>
+        <label for="customUnderscore">Custom Characters (_):</label>
+        <textarea id="customUnderscore"></textarea>
+        <label for="customAsterisk">Custom Characters (*):</label>
+        <textarea id="customAsterisk"></textarea>
+        <label for="customCaret">Custom Characters (^):</label>
+        <textarea id="customCaret"></textarea>
+        <label for="customAmpersand">Custom Characters (&):</label>
+        <textarea id="customAmpersand"></textarea>
+        <label for="customDollar">Custom Characters ($):</label>
+        <textarea id="customDollar"></textarea>
+        <label for="customPound">Custom Characters (£):</label>
+        <textarea id="customPound"></textarea>
+        <label for="customNot">Custom Characters (!):</label>
+        <textarea id="customNot"></textarea>
+        <button type="button" onclick="generateStrings()">Generate</button>
+    </form>
 
-        <h3>2. Custom Template</h3>
-        <p>
-            <strong>Custom template:</strong> Use the input box labeled "Custom template" to define the structure of your random strings. You can include various symbols to represent different types of characters:
-        </p>
-        <ul>
-            <li><code>%</code>: Random characters from the default set (a-z, 0-9).</li>
-            <li><code>~</code>: Random characters from the custom set defined for ~.</li>
-            <li><code>\</code>: Random characters from the custom set defined for \.</li>
-            <li><code>|</code>: Random characters from the custom set defined for |.</li>
-            <li><code>#</code>: Random characters from the custom set defined for #.</li>
-            <li><code>.</code>: Random characters from the custom set defined for .</li>
-            <li><code>,</code>: Random characters from the custom set defined for ,</li>
-            <li><code>@</code>: Random characters from the custom set defined for @.</li>
-            <li><code>?</code>: Random characters from the custom set defined for ?.</li>
-            <li><code>+</code>: Random characters from the custom set defined for +.</li>
-            <li><code>_</code>: Random characters from the custom set defined for _.</li>
-            <li><code>*</code>: Random characters from the custom set defined for *.</li>
-            <li><code>^</code>: Random characters from the custom set defined for ^.</li>
-            <li><code>&</code>: Random characters from the custom set defined for &.</li>
-            <li><code>$</code>: Random characters from the custom set defined for $.</li>
-            <li><code>£</code>: Random characters from the custom set defined for £.</li>
-            <li><code>¬</code>: Random characters from the custom set defined for ¬.</li>
+    <div id="presetMenu">
+        <h3>Presets</h3>
+        <ul id="presetList">
+            <li>Preset 1</li>
+            <li>Preset 2</li>
+            <li>Preset 3</li>
+            <li>Preset 4</li>
+            <li>Preset 5</li>
+            <li>Preset 6</li>
+            <li>Preset 7</li>
+            <li>Preset 8</li>
+            <li>Preset 9</li>
+            <li>Preset 10</li>
+            <li>Preset 11</li>
+            <li>Preset 12</li>
+            <li>Preset 13</li>
+            <li>Preset 14</li>
+            <li>Preset 15</li>
+            <li>Preset 16</li>
+            <li>Preset 17</li>
+            <li>Preset 18</li>
+            <li>Preset 19</li>
+            <li>Preset 20</li>
         </ul>
-        <p>
-            You can specify a fixed length by repeating the symbol (e.g., <code>%%%<code> for 3 random characters). To specify a range of lengths, use the format <code>[symbol(min-max)]</code> (e.g., <code>[%](3-5)</code> for 3 to 5 random characters).
-        </p>
-
-        <h3>3. Custom Characters</h3>
-        <p>
-            For each symbol, you can define custom characters by entering them one per line in the respective text areas. For example, for <code>%</code>, you can enter:
-        </p>
-        <pre>
-a
-b
-c
-1
-2
-3
-        </pre>
-        <p>
-            This will make the generator use only these characters for the <code>%</code> symbol.
-        </p>
-
-        <h3>4. Delimiter</h3>
-        <p>
-            <strong>Delimiter:</strong> Enter a character or string to separate each generated random string. For example, if you enter a comma, the output strings will be separated by commas.
-        </p>
-
-        <h3>5. Generate and Download</h3>
-        <p>
-            <strong>Generate:</strong> Click the "Generate" button to create the random strings based on your template and options.
-        </p>
-        <p>
-            <strong>Download as .txt:</strong> Click the "Download as .txt" button to download the generated strings as a text file.
-        </p>
-
-        <h3>Examples</h3>
-        <p>
-            Here are a few examples of custom templates:
-        </p>
-        <ul>
-            <li><code>prefix-%(3-5)-suffix</code>: Generates a string with "prefix-", followed by 3 to 5 random characters, and ending with "-suffix".</li>
-            <li><code>[%(5)]</code>: Generates a string with 5 random characters.</li>
-            <li><code>[£(2-4)]@[?(3)]</code>: Generates a string with 2 to 4 random £ characters, followed by "@", and then 3 random ? characters.</li>
-        </ul>
+        <div>
+            <button onclick="savePreset()">Save</button>
+            <button onclick="loadPreset()">Load</button>
+        </div>
     </div>
+
+    <h2>Instructions</h2>
+    <div id="guide">
+        <p>
+            **Instructions for using the preset menu:**
+            1. There should be 20 presets that you can save or load.
+            2. The menu should be scrollable.
+            3. Click on one of the presets (e.g., Preset 1) and press save to save all the characters that are in the text inputs for the symbols.
+            4. When you press that preset and it loads all the characters in the preset.
+            5. When a preset has all the characters, it should have (FULL) beside the preset name.
+        </p>
+    </div>
+
+    <div id="result"></div>
 
     <script>
-        function getRandomString(length, customChars = 'abcdefghijklmnopqrstuvwxyz0123456789') {
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += customChars.charAt(Math.floor(Math.random() * customChars.length));
-            }
-            return result;
-        }
+        const presets = Array(20).fill(null);
 
         function getCustomChars(id) {
             const customChars = document.getElementById(id).value.split('\n').join('');
             return customChars || 'abcdefghijklmnopqrstuvwxyz0123456789';
         }
 
-        function getRandomLength(min, max) {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
+        function savePreset() {
+            const selectedPreset = document.querySelector('#presetList li.selected');
+            if (!selectedPreset) return alert('Please select a preset to save.');
+
+            const index = [...selectedPreset.parentElement.children].indexOf(selectedPreset);
+            presets[index] = {
+                customChars: getCustomChars('customChars'),
+                customTilde: getCustomChars('customTilde'),
+                customBackslash: getCustomChars('customBackslash'),
+                customPipe: getCustomChars('customPipe'),
+                customHash: getCustomChars('customHash'),
+                customDot: getCustomChars('customDot'),
+                customComma: getCustomChars('customComma'),
+                customAtSymbol: getCustomChars('customAtSymbol'),
+                customQuestionMark: getCustomChars('customQuestionMark'),
+                customPlus: getCustomChars('customPlus'),
+                customUnderscore: getCustomChars('customUnderscore'),
+                customAsterisk: getCustomChars('customAsterisk'),
+                customCaret: getCustomChars('customCaret'),
+                customAmpersand: getCustomChars('customAmpersand'),
+                customDollar: getCustomChars('customDollar'),
+                customPound: getCustomChars('customPound'),
+                customNot: getCustomChars('customNot')
+            };
+
+            // Check if any field has characters for this preset
+            const hasCharacters = Object.values(presets[index]).some(value => value !== 'abcdefghijklmnopqrstuvwxyz0123456789');
+
+            if (hasCharacters) {
+                selectedPreset.textContent = `Preset ${index + 1} (FULL)`;
+            } else {
+                selectedPreset.textContent = `Preset ${index + 1}`;
+            }
         }
 
-        function generateRandomStrings() {
-            const numStrings = document.getElementById('numStrings').value;
-            const customTemplate = document.getElementById('customTemplate').value;
+        function loadPreset() {
+            const selectedPreset = document.querySelector('#presetList li.selected');
+            if (!selectedPreset) return alert('Please select a preset to load.');
 
+            const index = [...selectedPreset.parentElement.children].indexOf(selectedPreset);
+            const preset = presets[index];
+            if (!preset) return alert('No data saved in this preset.');
+
+            document.getElementById('customChars').value = preset.customChars;
+            document.getElementById('customTilde').value = preset.customTilde;
+            document.getElementById('customBackslash').value = preset.customBackslash;
+            document.getElementById('customPipe').value = preset.customPipe;
+            document.getElementById('customHash').value = preset.customHash;
+            document.getElementById('customDot').value = preset.customDot;
+            document.getElementById('customComma').value = preset.customComma;
+            document.getElementById('customAtSymbol').value = preset.customAtSymbol;
+            document.getElementById('customQuestionMark').value = preset.customQuestionMark;
+            document.getElementById('customPlus').value = preset.customPlus;
+            document.getElementById('customUnderscore').value = preset.customUnderscore;
+            document.getElementById('customAsterisk').value = preset.customAsterisk;
+            document.getElementById('customCaret').value = preset.customCaret;
+            document.getElementById('customAmpersand').value = preset.customAmpersand;
+            document.getElementById('customDollar')..value = preset.customDollar;
+            document.getElementById('customPound').value = preset.customPound;
+            document.getElementById('customNot').value = preset.customNot;
+
+            // Check if any field has characters for this preset
+            const hasCharacters = Object.values(preset).some(value => value !== 'abcdefghijklmnopqrstuvwxyz0123456789');
+
+            const selectedPreset = document.querySelector('#presetList li.selected');
+            if (hasCharacters) {
+                selectedPreset.textContent = `Preset ${index + 1} (FULL)`;
+            } else {
+                selectedPreset.textContent = `Preset ${index + 1}`;
+            }
+        }
+
+        document.querySelectorAll('#presetList li').forEach((li) => {
+            li.addEventListener('click', () => {
+                document.querySelectorAll('#presetList li').forEach((el) => el.classList.remove('selected'));
+                li.classList.add('selected');
+            });
+        });
+
+        function generateStrings() {
+            const template = document.getElementById('template').value;
             const customChars = getCustomChars('customChars');
             const customTilde = getCustomChars('customTilde');
             const customBackslash = getCustomChars('customBackslash');
@@ -210,62 +254,34 @@ c
             const customPound = getCustomChars('customPound');
             const customNot = getCustomChars('customNot');
 
-            const delimiter = document.getElementById('delimiter').value || '';
-            const outputList = document.getElementById('outputList');
-            outputList.innerHTML = '';
+            let result = '';
 
-            const regex = /\[(%|~|\\|\||#|\.|,|@|\?|~|\+|_|\*|\^|&|\$|£|¬)(\(\d+-\d+\))?\]/g;
-            let allStrings = [];
-
-            for (let i = 0; i < numStrings; i++) {
-                let generatedString = customTemplate.replace(regex, (match, symbol, range) => {
-                    let length;
-                    if (range) {
-                        const [min, max] = range.slice(1, -1).split('-').map(Number);
-                        length = getRandomLength(min, max);
-                    } else {
-                        length = symbol.length;
-                    }
-
-                    switch (symbol) {
-                        case '%': return getRandomString(length);
-                        case '~': return getRandomString(length, customTilde);
-                        case '\\': return getRandomString(length, customBackslash);
-                        case '|': return getRandomString(length, customPipe);
-                        case '#': return getRandomString(length, customHash);
-                        case '.': return getRandomString(length, customDot);
-                        case ',': return getRandomString(length, customComma);
-                        case '@': return getRandomString(length, customAtSymbol);
-                        case '?': return getRandomString(length, customQuestionMark);
-                        case '+': return getRandomString(length, customPlus);
-                        case '_': return getRandomString(length, customUnderscore);
-                        case '*': return getRandomString(length, customAsterisk);
-                        case '^': return getRandomString(length, customCaret);
-                        case '&': return getRandomString(length, customAmpersand);
-                        case '$': return getRandomString(length, customDollar);
-                        case '£': return getRandomString(length, customPound);
-                        case '¬': return getRandomString(length, customNot);
-                        default: return match;
-                    }
-                });
-
-                allStrings.push(generatedString);
-                const stringItem = document.createElement('p');
-                stringItem.textContent = generatedString;
-                outputList.appendChild(stringItem);
+            for (let char of template) {
+                switch (char) {
+                    case 'a': result += customChars[Math.floor(Math.random() * customChars.length)]; break;
+                    case '~': result += customTilde[Math.floor(Math.random() * customTilde.length)]; break;
+                    case '\\': result += customBackslash[Math.floor(Math.random() * customBackslash.length)]; break;
+                    case '|': result += customPipe[Math.floor(Math.random() * customPipe.length)]; break;
+                    case '#': result += customHash[Math.floor(Math.random() * customHash.length)]; break;
+                    case '.': result += customDot[Math.floor(Math.random() * customDot.length)]; break;
+                    case ',': result += customComma[Math.floor(Math.random() * customComma.length)]; break;
+                    case '@': result += customAtSymbol[Math.floor(Math.random() * customAtSymbol.length)]; break;
+                    case '?': result += customQuestionMark[Math.floor(Math.random() * customQuestionMark.length)]; break;
+                    case '+': result += customPlus[Math.floor(Math.random() * customPlus.length)]; break;
+                    case '_': result += customUnderscore[Math.floor(Math.random() * customUnderscore.length)]; break;
+                    case '*': result += customAsterisk[Math.floor(Math.random() * customAsterisk.length)]; break;
+                    case '^': result += customCaret[Math.floor(Math.random() * customCaret.length)]; break;
+                    case '&': result += customAmpersand[Math.floor(Math.random() * customAmpersand.length)]; break;
+                    case '$': result += customDollar[Math.floor(Math.random() * customDollar.length)]; break;
+                    case '£': result += customPound[Math.floor(Math.random() * customPound.length)]; break;
+                    case '!': result += customNot[Math.floor(Math.random() * customNot.length)]; break;
+                    default: result += char;
+                }
             }
 
-            return allStrings;
-        }
-
-        function downloadAsTxt() {
-            const allStrings = generateRandomStrings();
-            const blob = new Blob([allStrings.join('\n')], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'random_strings.txt';
-            link.click();
+            document.getElementById('result').textContent = result;
         }
     </script>
 </body>
-            </html>
+</html>
+
