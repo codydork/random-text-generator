@@ -252,61 +252,64 @@
             return customChars || 'abcdefghijklmnopqrstuvwxyz0123456789';
         }
 
-        // Generate random strings based on template and input
-        function generateRandomStrings() {
-            const numStrings = parseInt(document.getElementById('numStrings').value);
-            const customTemplate = document.getElementById('customTemplate').value;
+      // Generate random strings based on template and input
+function generateRandomStrings() {
+    const numStrings = parseInt(document.getElementById('numStrings').value);
+    const customTemplate = document.getElementById('customTemplate').value;
 
-            const customChars = getCustomChars('customChars');
-            const customTilde = getCustomChars('customTilde');
-            const customDollar = getCustomChars('customDollar');
-            const customAt = getCustomChars('customAt');
-            const customHash = getCustomChars('customHash');
+    const customChars = getCustomChars('customChars');
+    const customTilde = getCustomChars('customTilde');
+    const customDollar = getCustomChars('customDollar');
+    const customAt = getCustomChars('customAt');
+    const customHash = getCustomChars('customHash');
 
-            const delimiter = document.getElementById('delimiter').value || '';
+    const delimiter = document.getElementById('delimiter').value || '';
 
-            // Extract range from the lengthRange input
-            const lengthRange = document.getElementById('lengthRange').value;
-            const [minLength, maxLength] = lengthRange.split('-').map(Number);
+    // Extract range from the lengthRange input
+    const lengthRange = document.getElementById('lengthRange').value;
+    const [minLength, maxLength] = lengthRange.split('-').map(Number);
 
-            // Regular expression to match symbols inside brackets and ¬
-            const regex = /\(¬([%~@$#])\)|\((%)\)|\((~)\)|\((\$)\)|\((@)\)|\((#)\)/g;
-            let allStrings = [];
+    // Regular expression to match symbols inside brackets and ¬
+    const regex = /\(¬([%~@$#])\)|\((%)\)|\((~)\)|\((\$)\)|\((@)\)|\((#)\)/g;
+    let allStrings = [];
 
-            for (let i = 0; i < numStrings; i++) {
-                let generatedString = customTemplate.replace(regex, (match, lengthSymbol, percent, tilde, dollar, at, hash) => {
-                    let length = 1; // Default length
-                    if (lengthSymbol) {
-                        // If ¬ is used, generate a random length within the range
-                        length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
-                        if (lengthSymbol === '%') return getRandomString(length, customChars);
-                        if (lengthSymbol === '~') return getRandomString(length, customTilde);
-                        if (lengthSymbol === '$') return getRandomString(length, customDollar);
-                        if (lengthSymbol === '@') return getRandomString(length, customAt);
-                        if (lengthSymbol === '#') return getRandomString(length, customHash);
-                    }
-                    if (percent) return getRandomString(length, customChars);
-                    if (tilde) return getRandomString(length, customTilde);
-                    if (dollar) return getRandomString(length, customDollar);
-                    if (at) return getRandomString(length, customAt);
-                    if (hash) return getRandomString(length, customHash);
-                    return match;
-                });
-
-                allStrings.push(generatedString);
+    for (let i = 0; i < numStrings; i++) {
+        let generatedString = customTemplate.replace(regex, (match, lengthSymbol, percent, tilde, dollar, at, hash) => {
+            let length = 1; // Default length
+            if (lengthSymbol) {
+                // If ¬ is used, generate a random length within the range
+                length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+                if (lengthSymbol === '%') return getRandomString(length, customChars);
+                if (lengthSymbol === '~') return getRandomString(length, customTilde);
+                if (lengthSymbol === '$') return getRandomString(length, customDollar);
+                if (lengthSymbol === '@') return getRandomString(length, customAt);
+                if (lengthSymbol === '#') return getRandomString(length, customHash);
             }
+            if (percent) return getRandomString(length, customChars);
+            if (tilde) return getRandomString(length, customTilde);
+            if (dollar) return getRandomString(length, customDollar);
+            if (at) return getRandomString(length, customAt);
+            if (hash) return getRandomString(length, customHash);
+            return match;
+        });
 
-            return allStrings.join(delimiter);
-        }
+        allStrings.push(generatedString);
+    }
 
-        // Download the generated strings as a .txt file
-        function downloadAsTxt() {
-            const allStrings = generateRandomStrings();
-            const blob = new Blob([allStrings], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'random_strings.txt';
-            link.click();
+    // Join strings with newline character
+    return allStrings.join('\n');
+}
+
+      // Download the generated strings as a .txt file
+function downloadAsTxt() {
+    const allStrings = generateRandomStrings();
+    const blob = new Blob([allStrings], { type: 'text/plain' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'random_strings.txt';
+    link.click();
+}
+
         }
 
         // Toggle the display of section content
