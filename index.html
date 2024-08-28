@@ -20,12 +20,13 @@
 
         h1 {
             color: #007bff;
+            margin-bottom: 20px;
         }
 
         .container {
             margin: 20px auto;
             padding: 20px;
-            width: 60%;
+            width: 70%;
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -41,14 +42,14 @@
             text-align: left;
         }
 
-        label {
+        .input-group label {
             display: block;
             font-weight: bold;
             margin-bottom: 5px;
         }
 
         input[type="number"], input[type="text"], textarea {
-            width: calc(100% - 20px);
+            width: 100%;
             padding: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
@@ -56,6 +57,7 @@
             font-size: 14px;
             background-color: #f9f9f9;
             color: #333;
+            margin-bottom: 10px;
         }
 
         .dark-mode input[type="number"], .dark-mode input[type="text"], .dark-mode textarea {
@@ -70,7 +72,7 @@
         }
 
         button {
-            margin: 10px;
+            margin: 10px 0;
             padding: 10px 20px;
             background-color: #007bff;
             color: #fff;
@@ -95,7 +97,7 @@
             background-color: #f1f1f1;
             border-radius: 5px;
             border: 1px solid #ccc;
-            width: 80%;
+            width: 90%;
             transition: background-color 0.3s;
         }
 
@@ -145,7 +147,7 @@
 
         <div class="input-group">
             <label for="customTemplate">Custom template (use symbols inside brackets):</label>
-            <input type="text" id="customTemplate" name="customTemplate" placeholder="(¬%)-(¬%%%%%%)-($)">
+            <input type="text" id="customTemplate" name="customTemplate" placeholder="(¬%)-(¬%%%%%%)-(¬@)">
         </div>
 
         <div class="input-group">
@@ -166,6 +168,16 @@
         <div class="input-group">
             <label for="customDollar">Custom characters for $ (one per line):</label>
             <textarea id="customDollar" name="customDollar" placeholder="x\ny\nz\n7\n8\n9"></textarea>
+        </div>
+
+        <div class="input-group">
+            <label for="customAt">Custom characters for @ (one per line):</label>
+            <textarea id="customAt" name="customAt" placeholder="p\nq\nr\ns\nt\nu"></textarea>
+        </div>
+
+        <div class="input-group">
+            <label for="customHash">Custom characters for # (one per line):</label>
+            <textarea id="customHash" name="customHash" placeholder="0\n1\n2\n3\n4\n5"></textarea>
         </div>
 
         <div class="input-group">
@@ -190,14 +202,21 @@
 
             <h3 onclick="toggleSection(this)">2. Custom Template</h3>
             <div class="section-content">
-                <p><strong>Custom template:</strong> Use the input box labeled "Custom template" to define the structure of your random strings. Symbols must be enclosed in brackets <code>()</code> to work. Use the special symbol <code>¬</code> to define a random length (e.g., <code>¬%</code> generates a random number of characters based on the range you provide).</p>
+                <p><strong>Custom template:</strong> Use the input box labeled "Custom template" to define the structure of your random strings. Symbols must be enclosed in brackets <code>()</code> to work. You can include various symbols:</p>
+                <ul>
+                    <li><code>(¬%)</code>: Random characters from the custom set defined for % with length specified by the range.</li>
+                    <li><code>(¬~)</code>: Random characters from the custom set defined for ~ with length specified by the range.</li>
+                    <li><code>(¬$)</code>: Random characters from the custom set defined for $ with length specified by the range.</li>
+                    <li><code>(¬@)</code>: Random characters from the custom set defined for @ with length specified by the range.</li>
+                    <li><code>(¬#)</code>: Random characters from the custom set defined for # with length specified by the range.</li>
+                </ul>
             </div>
 
             <h3 onclick="toggleSection(this)">3. Custom Characters</h3>
             <div class="section-content">
                 <p>For each symbol, define custom characters by entering them one per line in the respective text areas. For example, for <code>%</code>, enter:</p>
                 <pre>a\nb\nc\n1\n2\n3</pre>
-                <p>This makes the generator use only these characters for the <code>(%)</code> symbol.</p>
+                <p>This makes the generator use only these characters for the <code>(¬%)</code> symbol.</p>
             </div>
 
             <h3 onclick="toggleSection(this)">4. Delimiter</h3>
@@ -241,6 +260,8 @@
             const customChars = getCustomChars('customChars');
             const customTilde = getCustomChars('customTilde');
             const customDollar = getCustomChars('customDollar');
+            const customAt = getCustomChars('customAt');
+            const customHash = getCustomChars('customHash');
 
             const delimiter = document.getElementById('delimiter').value || '';
 
@@ -249,11 +270,11 @@
             const [minLength, maxLength] = lengthRange.split('-').map(Number);
 
             // Regular expression to match symbols inside brackets and ¬
-            const regex = /\(¬([%~$])\)|\((%)\)|\((~)\)|\((\$)\)/g;
+            const regex = /\(¬([%~@$#])\)|\((%)\)|\((~)\)|\((\$)\)|\((@)\)|\((#)\)/g;
             let allStrings = [];
 
             for (let i = 0; i < numStrings; i++) {
-                let generatedString = customTemplate.replace(regex, (match, lengthSymbol, percent, tilde, dollar) => {
+                let generatedString = customTemplate.replace(regex, (match, lengthSymbol, percent, tilde, dollar, at, hash) => {
                     let length = 1; // Default length
                     if (lengthSymbol) {
                         // If ¬ is used, generate a random length within the range
@@ -261,10 +282,14 @@
                         if (lengthSymbol === '%') return getRandomString(length, customChars);
                         if (lengthSymbol === '~') return getRandomString(length, customTilde);
                         if (lengthSymbol === '$') return getRandomString(length, customDollar);
+                        if (lengthSymbol === '@') return getRandomString(length, customAt);
+                        if (lengthSymbol === '#') return getRandomString(length, customHash);
                     }
                     if (percent) return getRandomString(length, customChars);
                     if (tilde) return getRandomString(length, customTilde);
                     if (dollar) return getRandomString(length, customDollar);
+                    if (at) return getRandomString(length, customAt);
+                    if (hash) return getRandomString(length, customHash);
                     return match;
                 });
 
