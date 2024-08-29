@@ -146,8 +146,8 @@
         </div>
 
         <div class="input-group">
-            <label for="customTemplate">Custom template (use symbols inside brackets):</label>
-            <input type="text" id="customTemplate" name="customTemplate" placeholder="(¬%)-(¬%%%%%%)-(¬@)">
+            <label for="customTemplate">Custom template (use symbols inside brackets, use \n for line breaks):</label>
+            <input type="text" id="customTemplate" name="customTemplate" placeholder="(¬%)-(¬%%%%%%)-(¬@)\nAnother line: (¬#)">
         </div>
 
         <div class="input-group">
@@ -207,6 +207,7 @@
                 <li><code>(¬@)</code>: Random characters from the custom set defined for @ with length specified by the range.</li>
                 <li><code>(¬#)</code>: Random characters from the custom set defined for # with length specified by the range.</li>
             </ul>
+            <p>You can include <code>\n</code> within the template to add a line break in the generated strings.</p>
 
             <h3>3. Custom Characters</h3>
             <p>For each symbol, define custom characters by entering them one per line in the respective text areas. For example, for <code>%</code>, enter:</p>
@@ -246,7 +247,7 @@
         // Generate random strings based on template and input
         function generateRandomStrings() {
             const numStrings = parseInt(document.getElementById('numStrings').value);
-            const customTemplate = document.getElementById('customTemplate').value;
+            let customTemplate = document.getElementById('customTemplate').value;
 
             const customChars = getCustomChars('customChars');
             const customTilde = getCustomChars('customTilde');
@@ -259,6 +260,9 @@
 
             const regex = /\(¬([%~@$#])\)|\((%)\)|\((~)\)|\((\$)\)|\((@)\)|\((#)\)/g;
             let allStrings = [];
+
+            // Replace \n with an actual newline character
+            customTemplate = customTemplate.replace(/\\n/g, '\n');
 
             for (let i = 0; i < numStrings; i++) {
                 let generatedString = customTemplate.replace(regex, (match, lengthSymbol, percent, tilde, dollar, at, hash) => {
