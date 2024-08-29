@@ -4,14 +4,142 @@
     <meta charset="UTF-8">
     <title>Random String Generator</title>
     <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
 
+        body.dark-mode {
+            background-color: #333;
+            color: #f9f9f9;
+        }
+
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            margin: 20px auto;
+            padding: 20px;
+            width: 70%;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode .container {
+            background-color: #444;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="number"], input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: 14px;
+            background-color: #f9f9f9;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .dark-mode input[type="number"], .dark-mode input[type="text"], .dark-mode textarea {
+            background-color: #555;
+            color: #f9f9f9;
+            border-color: #888;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 60px;
+        }
+
+        button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .dark-mode button {
+            background-color: #0066cc;
+        }
+
+        .section {
+            text-align: left;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 90%;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode .section {
+            background-color: #555;
+            border-color: #888;
+        }
+
+        .section h2 {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            margin: 0;
+        }
+
+        .section-content {
+            display: none;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 5px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-top: 1px solid #007bff;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode .section-content {
+            background-color: #666;
+            border-color: #007bff;
+        }
+
+        .toggle-dark-mode {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
     <h1>Random String Generator</h1>
     
     <div class="container">
-        <!-- Input groups for various options -->
         <div class="input-group">
             <label for="numStrings">Number of strings to generate:</label>
             <input type="number" id="numStrings" name="numStrings" min="1" max="1000" value="1">
@@ -57,12 +185,11 @@
             <input type="text" id="delimiter" name="delimiter" placeholder=",">
         </div>
 
-        <button id="downloadBtn">Download as .txt</button>
+        <button onclick="downloadAsTxt()">Download as .txt</button>
     </div>
 
-    <button id="toggleDarkModeBtn" class="toggle-dark-mode">Toggle Dark Mode</button>
+    <button class="toggle-dark-mode" onclick="toggleDarkMode()">Toggle Dark Mode</button>
 
-    <!-- Comprehensive Guide -->
     <div id="guide" class="section">
         <h2 onclick="toggleSection(this)">Comprehensive Guide for Random String Generator</h2>
         <div class="section-content">
@@ -102,13 +229,10 @@
             const customAt = getCustomChars('customAt');
             const customHash = getCustomChars('customHash');
 
-            const delimiter = document.getElementById('delimiter').value || '';
-
             // Extract range from the lengthRange input
             const lengthRange = document.getElementById('lengthRange').value;
             const [minLength, maxLength] = lengthRange.split('-').map(Number);
 
-            // Regular expression to match symbols inside brackets and ¬
             const regex = /\(¬([%~@$#])\)|\((%)\)|\((~)\)|\((\$)\)|\((@)\)|\((#)\)/g;
             let allStrings = [];
 
@@ -135,8 +259,7 @@
                 allStrings.push(generatedString);
             }
 
-            // Join strings with delimiter or newline
-            return allStrings.join(delimiter || '\n');
+            return allStrings.join('\n'); // Ensure strings are on new lines
         }
 
         // Download the generated strings as a .txt file
@@ -149,39 +272,30 @@
             link.click();
         }
 
-        // Save form data to localStorage
-        function saveToLocalStorage() {
-            const elements = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
-            elements.forEach(element => {
-                localStorage.setItem(element.id, element.value);
+        // Save the user inputs to localStorage
+        function saveUserInputs() {
+            const inputs = document.querySelectorAll('input[type="number"], input[type="text"], textarea');
+            inputs.forEach(input => {
+                localStorage.setItem(input.id, input.value);
             });
         }
 
-        // Load form data from localStorage
-        function loadFromLocalStorage() {
-            const elements = document.querySelectorAll('input[type="text"], input[type="number"], textarea');
-            elements.forEach(element => {
-                if (localStorage.getItem(element.id)) {
-                    element.value = localStorage.getItem(element.id);
+        // Load the user inputs from localStorage
+        function loadUserInputs() {
+            const inputs = document.querySelectorAll('input[type="number"], input[type="text"], textarea');
+            inputs.forEach(input => {
+                const savedValue = localStorage.getItem(input.id);
+                if (savedValue !== null) {
+                    input.value = savedValue;
                 }
             });
         }
 
-        // Save data on every input change
-        document.querySelectorAll('input[type="text"], input[type="number"], textarea').forEach(element => {
-            element.addEventListener('input', saveToLocalStorage);
-        });
+        // Load inputs when the page is loaded
+        window.onload = loadUserInputs;
 
-        // Load data when the page loads
-        window.onload = function() {
-            loadFromLocalStorage();
-
-            // Add event listener for the download button
-            document.getElementById('downloadBtn').addEventListener('click', downloadAsTxt);
-
-            // Add event listener for the dark mode toggle button
-            document.getElementById('toggleDarkModeBtn').addEventListener('click', toggleDarkMode);
-        };
+        // Save inputs before the page is unloaded
+        window.onbeforeunload = saveUserInputs;
 
         // Toggle the display of section content
         function toggleSection(header) {
