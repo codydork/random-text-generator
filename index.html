@@ -157,7 +157,7 @@
 
         <div class="input-group">
             <label for="customChars">Custom characters for % (one per line):</label>
-            <textarea id="customChars" name="customChars" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+            <textarea id="customChars" name="customChars" placeholder="2008\n2009\n2010"></textarea>
         </div>
 
         <div class="input-group">
@@ -210,7 +210,7 @@
             <p>You can include <code>\n</code> within the template to add a line break in the generated strings.</p>
 
             <h3>3. Custom Characters</h3>
-            <p>For each symbol, define custom characters by entering them one per line in the respective text areas. This ensures each line is treated as a separate character or entry for the corresponding symbol set. For example, for <code>%</code>, enter:</p>
+            <p>For each symbol, define custom characters by entering them one per line in the respective text areas. This ensures each line is treated as a separate entry for the corresponding symbol set. For example, for <code>%</code>, enter:</p>
             <pre>2008<br>2009<br>2010</pre>
             <p>This makes the generator use these complete entries as possible outputs for the <code>(¬%)</code> symbol.</p>
 
@@ -229,14 +229,10 @@
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
         }
 
-        // Utility function to generate a random string
-        function getRandomString(length, charactersArray) {
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                const randomIndex = Math.floor(Math.random() * charactersArray.length);
-                result += charactersArray[randomIndex];
-            }
-            return result;
+        // Utility function to select a random entry from an array
+        function getRandomEntry(charactersArray) {
+            const randomIndex = Math.floor(Math.random() * charactersArray.length);
+            return charactersArray[randomIndex];
         }
 
         // Get custom characters or default if not provided
@@ -267,13 +263,14 @@
 
             for (let i = 0; i < numStrings; i++) {
                 let generatedString = customTemplate.replace(regex, (match, symbol) => {
-                    let length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
-                    if (symbol === '%') return getRandomString(length, customChars);
-                    if (symbol === '~') return getRandomString(length, customTilde);
-                    if (symbol === '$') return getRandomString(length, customDollar);
-                    if (symbol === '@') return getRandomString(length, customAt);
-                    if (symbol === '#') return getRandomString(length, customHash);
-                    return match;
+                    let selectedArray = [];
+                    if (symbol === '%') selectedArray = customChars;
+                    if (symbol === '~') selectedArray = customTilde;
+                    if (symbol === '$') selectedArray = customDollar;
+                    if (symbol === '@') selectedArray = customAt;
+                    if (symbol === '#') selectedArray = customHash;
+                    
+                    return getRandomEntry(selectedArray);
                 });
 
                 allStrings.push(generatedString);
