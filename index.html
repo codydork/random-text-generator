@@ -210,7 +210,7 @@
             <p>You can include <code>\n</code> within the template to add a line break in the generated strings.</p>
 
             <h3>3. Custom Characters</h3>
-            <p>For each symbol, define custom characters by entering them one per line in the respective text areas. For example, for <code>%</code>, enter:</p>
+            <p>For each symbol, define custom characters by entering them one per line in the respective text areas. This ensures each line is treated as a separate character or entry for the corresponding symbol set. For example, for <code>%</code>, enter:</p>
             <pre>a\nb\nc\n1\n2\n3</pre>
             <p>This makes the generator use only these characters for the <code>(¬%)</code> symbol.</p>
 
@@ -240,8 +240,8 @@
 
         // Get custom characters or default if not provided
         function getCustomChars(id) {
-            const customChars = document.getElementById(id).value.replace(/\n/g, '');
-            return customChars || 'abcdefghijklmnopqrstuvwxyz0123456789';
+            const customChars = document.getElementById(id).value.split('\n');
+            return customChars.join('') || 'abcdefghijklmnopqrstuvwxyz0123456789';
         }
 
         // Generate random strings based on template and input
