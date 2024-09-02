@@ -201,11 +201,11 @@
             <h3>2. Custom Template</h3>
             <p><strong>Custom template:</strong> Use the input box labeled "Custom template" to define the structure of your random strings. Symbols must be enclosed in brackets <code>()</code> to work. You can include various symbols:</p>
             <ul>
-                <li><code>(¬%)</code>: Random characters from the custom set defined for % with length specified by the range.</li>
-                <li><code>(¬~)</code>: Random characters from the custom set defined for ~ with length specified by the range.</li>
-                <li><code>(¬$)</code>: Random characters from the custom set defined for $ with length specified by the range.</li>
-                <li><code>(¬@)</code>: Random characters from the custom set defined for @ with length specified by the range.</li>
-                <li><code>(¬#)</code>: Random characters from the custom set defined for # with length specified by the range.</li>
+                <li><code>(¬%)</code>: Random characters from the custom set defined for %.</li>
+                <li><code>(¬~)</code>: Random characters from the custom set defined for ~.</li>
+                <li><code>(¬$)</code>: Random characters from the custom set defined for $.</li>
+                <li><code>(¬@)</code>: Random characters from the custom set defined for @.</li>
+                <li><code>(¬#)</code>: Random characters from the custom set defined for #.</li>
             </ul>
             <p>You can include <code>\n</code> within the template to add a line break in the generated strings.</p>
 
@@ -252,10 +252,7 @@
             const customAt = getCustomChars('customAt');
             const customHash = getCustomChars('customHash');
 
-            const lengthRange = document.getElementById('lengthRange').value;
-            const [minLength, maxLength] = lengthRange.split('-').map(Number);
-
-            const regex = /\(¬([%~@$#])\)/g;
+            const regex = /\(¬([%~@$#])\)/g; // Update regex to match the template symbols
             let allStrings = [];
 
             // Replace \n with an actual newline character
@@ -270,13 +267,13 @@
                     if (symbol === '@') selectedArray = customAt;
                     if (symbol === '#') selectedArray = customHash;
                     
-                    return getRandomEntry(selectedArray);
+                    return getRandomEntry(selectedArray); // Replace with a randomly selected entry
                 });
 
                 allStrings.push(generatedString);
             }
 
-            return allStrings.join('\n'); // Ensure strings are on new lines
+            return allStrings.join('\n'); // Join all strings with new lines
         }
 
         // Download the generated strings as a .txt file
