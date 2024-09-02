@@ -210,8 +210,8 @@
             <p>You can include <code>\n</code> within the template to add a line break in the generated strings.</p>
 
             <h3>3. Custom Characters</h3>
-            <p>For each symbol, define custom characters by entering them one per line in the respective text areas. This ensures each line is treated as a separate character or entry for the corresponding symbol set. For example, for <code>%</code>, enter:</p>
-            <pre>a\nb\nc\n1\n2\n3</pre>
+            <p>For each symbol, define custom characters by entering them one per line in the respective text areas. This means each line should have a single character or entry. For example, for <code>%</code>, enter:</p>
+            <pre>a<br>b<br>c<br>1<br>2<br>3</pre>
             <p>This makes the generator use only these characters for the <code>(¬%)</code> symbol.</p>
 
             <h3>4. Delimiter</h3>
@@ -240,7 +240,7 @@
 
         // Get custom characters or default if not provided
         function getCustomChars(id) {
-            const customChars = document.getElementById(id).value.split('\n');
+            const customChars = document.getElementById(id).value.split('\n');  // Split by newline to handle each line as separate
             return customChars.join('') || 'abcdefghijklmnopqrstuvwxyz0123456789';
         }
 
