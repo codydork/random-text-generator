@@ -252,7 +252,7 @@
             const customAt = getCustomChars('customAt');
             const customHash = getCustomChars('customHash');
 
-            const regex = /\(¬([%~@$#])\)/g; // Update regex to match the template symbols
+            const regex = /\(¬([%~@$#])\)/g; // Ensure the regex matches the template symbols
             let allStrings = [];
 
             // Replace \n with an actual newline character
@@ -261,12 +261,26 @@
             for (let i = 0; i < numStrings; i++) {
                 let generatedString = customTemplate.replace(regex, (match, symbol) => {
                     let selectedArray = [];
-                    if (symbol === '%') selectedArray = customChars;
-                    if (symbol === '~') selectedArray = customTilde;
-                    if (symbol === '$') selectedArray = customDollar;
-                    if (symbol === '@') selectedArray = customAt;
-                    if (symbol === '#') selectedArray = customHash;
-                    
+                    switch (symbol) {
+                        case '%':
+                            selectedArray = customChars;
+                            break;
+                        case '~':
+                            selectedArray = customTilde;
+                            break;
+                        case '$':
+                            selectedArray = customDollar;
+                            break;
+                        case '@':
+                            selectedArray = customAt;
+                            break;
+                        case '#':
+                            selectedArray = customHash;
+                            break;
+                        default:
+                            return match; // If no match, return the original template symbol
+                    }
+
                     return getRandomEntry(selectedArray); // Replace with a randomly selected entry
                 });
 
