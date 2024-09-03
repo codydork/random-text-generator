@@ -252,7 +252,7 @@
             const customAt = getCustomChars('customAt');
             const customHash = getCustomChars('customHash');
 
-            const regex = /\(¬([%~@$#])\)/g; // Ensure the regex matches the template symbols
+            const regex = /\(¬([%~@$#])\)/g; // Regex to match symbols within the template
             let allStrings = [];
 
             // Replace \n with an actual newline character
