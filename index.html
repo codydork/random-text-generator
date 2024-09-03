@@ -151,11 +151,6 @@
         </div>
 
         <div class="input-group">
-            <label for="lengthRange">Length range for ¬ symbol (e.g., 3-5):</label>
-            <input type="text" id="lengthRange" name="lengthRange" placeholder="3-5">
-        </div>
-
-        <div class="input-group">
             <label for="customChars">Custom characters for % (one per line):</label>
             <textarea id="customChars" name="customChars" placeholder="2008\n2009\n2010"></textarea>
         </div>
@@ -252,37 +247,27 @@
             const customAt = getCustomChars('customAt');
             const customHash = getCustomChars('customHash');
 
-            const regex = /\(¬([%~@$#])\)/g; // Regex to match symbols within the template
+            const symbolMap = {
+                '%': customChars,
+                '~': customTilde,
+                '$': customDollar,
+                '@': customAt,
+                '#': customHash
+            };
+
             let allStrings = [];
 
             // Replace \n with an actual newline character
             customTemplate = customTemplate.replace(/\\n/g, '\n');
 
             for (let i = 0; i < numStrings; i++) {
-                let generatedString = customTemplate.replace(regex, (match, symbol) => {
-                    let selectedArray = [];
-                    switch (symbol) {
-                        case '%':
-                            selectedArray = customChars;
-                            break;
-                        case '~':
-                            selectedArray = customTilde;
-                            break;
-                        case '$':
-                            selectedArray = customDollar;
-                            break;
-                        case '@':
-                            selectedArray = customAt;
-                            break;
-                        case '#':
-                            selectedArray = customHash;
-                            break;
-                        default:
-                            return match; // If no match, return the original template symbol
-                    }
+                let generatedString = customTemplate;
 
-                    return getRandomEntry(selectedArray); // Replace with a randomly selected entry
-                });
+                // Replace each symbol with a random entry from the corresponding custom character set
+                for (const [symbol, chars] of Object.entries(symbolMap)) {
+                    const regex = new RegExp(`\\(¬${symbol}\\)`, 'g');
+                    generatedString = generatedString.replace(regex, () => getRandomEntry(chars));
+                }
 
                 allStrings.push(generatedString);
             }
