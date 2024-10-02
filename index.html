@@ -4,8 +4,136 @@
     <meta charset="UTF-8">
     <title>Random String Generator</title>
     <style>
-        body { /* Your original CSS */ }
-        /* No changes in the CSS */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #333;
+            color: #f9f9f9;
+        }
+
+        h1 {
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            margin: 20px auto;
+            padding: 20px;
+            width: 70%;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode .container {
+            background-color: #444;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        input[type="number"], input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-size: 14px;
+            background-color: #f9f9f9;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .dark-mode input[type="number"], .dark-mode input[type="text"], .dark-mode textarea {
+            background-color: #555;
+            color: #f9f9f9;
+            border-color: #888;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 60px;
+        }
+
+        button {
+            margin: 10px 0;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .dark-mode button {
+            background-color: #0066cc;
+        }
+
+        .section {
+            text-align: left;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 90%;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode .section {
+            background-color: #555;
+            border-color: #888;
+        }
+
+        .section h2 {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            margin: 0;
+        }
+
+        .section-content {
+            display: block;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 5px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-top: 1px solid #007bff;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode .section-content {
+            background-color: #666;
+            border-color: #007bff;
+        }
+
+        .toggle-dark-mode {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -23,33 +151,28 @@
         </div>
 
         <div class="input-group">
-            <label for="lengthRange">Length range for ¬ symbol (e.g., 3-5):</label>
-            <input type="text" id="lengthRange" name="lengthRange" placeholder="3-5">
+            <label for="customChars">Custom characters for % (one per line):</label>
+            <textarea id="customChars" name="customChars" placeholder="2008\n2009\n2010"></textarea>
         </div>
 
         <div class="input-group">
-            <label for="customChars">Custom characters for % (enter whole strings one per line):</label>
-            <textarea id="customChars" name="customChars" placeholder="2008\nabcd\nxyz"></textarea>
+            <label for="customTilde">Custom characters for ~ (one per line):</label>
+            <textarea id="customTilde" name="customTilde" placeholder="a\nb\nc\n1\n2\n3"></textarea>
         </div>
 
         <div class="input-group">
-            <label for="customTilde">Custom characters for ~ (enter whole strings one per line):</label>
-            <textarea id="customTilde" name="customTilde" placeholder="qrs\ntuv"></textarea>
+            <label for="customDollar">Custom characters for $ (one per line):</label>
+            <textarea id="customDollar" name="customDollar" placeholder="x\ny\nz\n7\n8\n9"></textarea>
         </div>
 
         <div class="input-group">
-            <label for="customDollar">Custom characters for $ (enter whole strings one per line):</label>
-            <textarea id="customDollar" name="customDollar" placeholder="alpha\nbeta\ngamma"></textarea>
+            <label for="customAt">Custom characters for @ (one per line):</label>
+            <textarea id="customAt" name="customAt" placeholder="p\nq\nr\ns\nt\nu"></textarea>
         </div>
 
         <div class="input-group">
-            <label for="customAt">Custom characters for @ (enter whole strings one per line):</label>
-            <textarea id="customAt" name="customAt" placeholder="cat\ndog"></textarea>
-        </div>
-
-        <div class="input-group">
-            <label for="customHash">Custom characters for # (enter whole strings one per line):</label>
-            <textarea id="customHash" name="customHash" placeholder="0\n1\n2\nabc"></textarea>
+            <label for="customHash">Custom characters for # (one per line):</label>
+            <textarea id="customHash" name="customHash" placeholder="0\n1\n2\n3\n4\n5"></textarea>
         </div>
 
         <div class="input-group">
@@ -62,29 +185,64 @@
 
     <button class="toggle-dark-mode" onclick="toggleDarkMode()">Toggle Dark Mode</button>
 
+    <div id="guide" class="section">
+        <h2 onclick="toggleSection(this)">Comprehensive Guide for Random String Generator</h2>
+        <div class="section-content">
+            <p>Welcome to the Random String Generator! Follow the instructions below to create custom random strings.</p>
+
+            <h3>1. Number of Strings</h3>
+            <p><strong>Number of strings to generate:</strong> Enter the number of random strings you want to generate in the input box. You can generate up to 1000 strings at a time.</p>
+
+            <h3>2. Custom Template</h3>
+            <p><strong>Custom template:</strong> Use the input box labeled "Custom template" to define the structure of your random strings. Symbols must be enclosed in brackets <code>()</code> to work. You can include various symbols:</p>
+            <ul>
+                <li><code>(¬%)</code>: Random characters from the custom set defined for %.</li>
+                <li><code>(¬~)</code>: Random characters from the custom set defined for ~.</li>
+                <li><code>(¬$)</code>: Random characters from the custom set defined for $.</li>
+                <li><code>(¬@)</code>: Random characters from the custom set defined for @.</li>
+                <li><code>(¬#)</code>: Random characters from the custom set defined for #.</li>
+            </ul>
+            <p>You can include <code>\n</code> within the template to add a line break in the generated strings.</p>
+
+            <h3>3. Custom Characters</h3>
+            <p>For each symbol, define custom characters by entering them one per line in the respective text areas. This ensures each line is treated as a separate entry for the corresponding symbol set. For example, for <code>%</code>, enter:</p>
+            <pre>2008<br>2009<br>2010</pre>
+            <p>This makes the generator use these complete entries as possible outputs for the <code>(¬%)</code> symbol.</p>
+
+            <h3>4. Delimiter</h3>
+            <p><strong>Delimiter:</strong> Enter a character or string to separate each generated random string. For example, if you enter a comma, the output strings will be separated by commas.</p>
+
+            <h3>5. Generate and Download</h3>
+            <p><strong>Generate:</strong> Click the "Download as .txt" button to create and download the random strings based on your template and options.</p>
+        </div>
+    </div>
+
+    <!-- New section to display generated strings -->
+    <div class="section">
+        <h2>Generated Strings</h2>
+        <pre id="outputStrings"></pre>
+    </div>
+
     <script>
-        // Toggle dark mode
+        // Toggle between light and dark mode
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
         }
 
-        // Utility to generate a random string
-        function getRandomString(length, characterArray) {
-            const result = [];
-            for (let i = 0; i < length; i++) {
-                result.push(characterArray[Math.floor(Math.random() * characterArray.length)]);
-            }
-            return result.join('');
+        // Utility function to select a random entry from an array
+        function getRandomEntry(charactersArray) {
+            const randomIndex = Math.floor(Math.random() * charactersArray.length);
+            return charactersArray[randomIndex];
         }
 
-        // Read whole lines as strings rather than splitting characters
+        // Get custom characters or default if not provided
         function getCustomChars(id) {
-            const customChars = document.getElementById(id).value.trim().split('\n');
-            return customChars.length ? customChars : ['abcdefghijklmnopqrstuvwxyz0123456789'];
+            const customChars = document.getElementById(id).value.split('\n').filter(line => line.trim() !== '');
+            return customChars.length > 0 ? customChars : ['abcdefghijklmnopqrstuvwxyz0123456789'];
         }
 
-        // Handle template replacements and generate random strings
+        // Generate random strings based on template and input
         function generateRandomStrings() {
             const numStrings = parseInt(document.getElementById('numStrings').value);
             let customTemplate = document.getElementById('customTemplate').value;
@@ -95,42 +253,38 @@
             const customAt = getCustomChars('customAt');
             const customHash = getCustomChars('customHash');
 
-            const lengthRange = document.getElementById('lengthRange').value;
-            const [minLength, maxLength] = lengthRange.split('-').map(Number);
+            const symbolMap = {
+                '%': customChars,
+                '~': customTilde,
+                '$': customDollar,
+                '@': customAt,
+                '#': customHash
+            };
 
-            if (isNaN(minLength) || isNaN(maxLength) || minLength < 1 || maxLength < minLength) {
-                alert('Invalid length range. Please enter a valid range like 3-5.');
-                return;
-            }
+            let allStrings = [];
 
-            const regex = /\(¬([%~@$#])\)/g;
-
-            // Replace \n with a newline character
+            // Replace \n with an actual newline character
             customTemplate = customTemplate.replace(/\\n/g, '\n');
 
-            const allStrings = [];
-
             for (let i = 0; i < numStrings; i++) {
-                let generatedString = customTemplate.replace(regex, (match, symbol) => {
-                    let length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
-                    if (symbol === '%') return getRandomString(length, customChars);
-                    if (symbol === '~') return getRandomString(length, customTilde);
-                    if (symbol === '$') return getRandomString(length, customDollar);
-                    if (symbol === '@') return getRandomString(length, customAt);
-                    if (symbol === '#') return getRandomString(length, customHash);
-                    return match;
-                });
+                let generatedString = customTemplate;
+
+                // Replace each symbol with a random entry from the corresponding custom character set
+                for (const [symbol, chars] of Object.entries(symbolMap)) {
+                    const regex = new RegExp(`\\(¬${symbol}\\)`, 'g');
+                    generatedString = generatedString.replace(regex, () => getRandomEntry(chars));
+                }
 
                 allStrings.push(generatedString);
             }
 
-            return allStrings.join('\n');
+            return allStrings.join('\n'); // Join all strings with new lines
         }
 
         // Download the generated strings as a .txt file
         function downloadAsTxt() {
             const allStrings = generateRandomStrings();
-            if (!allStrings) return;
+            document.getElementById('outputStrings').textContent = allStrings; // Display generated strings
             const blob = new Blob([allStrings], { type: 'text/plain' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
@@ -138,7 +292,7 @@
             link.click();
         }
 
-        // Save and load user inputs
+        // Save the user inputs to localStorage
         function saveUserInputs() {
             const inputs = document.querySelectorAll('input[type="number"], input[type="text"], textarea');
             inputs.forEach(input => {
@@ -146,6 +300,7 @@
             });
         }
 
+        // Load the user inputs from localStorage
         function loadUserInputs() {
             const inputs = document.querySelectorAll('input[type="number"], input[type="text"], textarea');
             inputs.forEach(input => {
@@ -156,15 +311,28 @@
             });
         }
 
-        // Load user inputs and dark mode on window load
+        // Load inputs and dark mode setting when the page is loaded
         window.onload = () => {
             loadUserInputs();
+
+            // Load dark mode setting
             if (localStorage.getItem('darkMode') === 'enabled') {
                 document.body.classList.add('dark-mode');
             }
         };
 
+        // Save inputs and dark mode setting before the page is unloaded
         window.onbeforeunload = saveUserInputs;
+
+        // Toggle the display of section content
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        }
     </script>
 </body>
 </html>
