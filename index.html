@@ -233,7 +233,8 @@
             const lengthRange = document.getElementById('lengthRange').value;
             const [minLength, maxLength] = lengthRange.split('-').map(Number);
             
-            const regex = /\(¬([%~@$#])\)/g;
+            // Regex to handle both ¬ and sequences of symbols
+            const regex = /\(¬([%~@$#])\)|(%+|~+|\$+|@+|#+)/g;
             let allStrings = [];
 
             // Replace \n with actual newlines in the template
@@ -241,12 +242,24 @@
 
             for (let i = 0; i < numStrings; i++) {
                 let generatedString = customTemplate.replace(regex, (match, symbol) => {
-                    let length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
-                    if (symbol === '%') return getRandomString(length, customChars);
-                    if (symbol === '~') return getRandomString(length, customTilde);
-                    if (symbol === '$') return getRandomString(length, customDollar);
-                    if (symbol === '@') return getRandomString(length, customAt);
-                    if (symbol === '#') return getRandomString(length, customHash);
+                    if (symbol) {
+                        // Handling ¬ symbol with length range
+                        let length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+                        if (symbol === '%') return getRandomString(length, customChars);
+                        if (symbol === '~') return getRandomString(length, customTilde);
+                        if (symbol === '$') return getRandomString(length, customDollar);
+                        if (symbol === '@') return getRandomString(length, customAt);
+                        if (symbol === '#') return getRandomString(length, customHash);
+                    } else {
+                        // Handling sequence of symbols without ¬
+                        let length = match.length;
+                        let symbol = match[0];
+                        if (symbol === '%') return getRandomString(length, customChars);
+                        if (symbol === '~') return getRandomString(length, customTilde);
+                        if (symbol === '$') return getRandomString(length, customDollar);
+                        if (symbol === '@') return getRandomString(length, customAt);
+                        if (symbol === '#') return getRandomString(length, customHash);
+                    }
                 });
                 allStrings.push(generatedString);
             }
