@@ -142,7 +142,7 @@
     <div class="container">
         <div class="input-group">
             <label for="numStrings">Number of strings to generate:</label>
-            <input type="number" id="numStrings" name="numStrings" min="1" max="1000" value="1">
+            <input type="number" id="numStrings" name="numStrings" min="1" max="10000000" value="1000">
         </div>
 
         <div class="input-group">
@@ -188,12 +188,49 @@
         <button onclick="downloadAsTxt()">Download as .txt</button>
     </div>
 
+    <!-- New File Generation Settings Section -->
+    <div class="section">
+        <h2 onclick="toggleSection(this)">File Generation Settings</h2>
+        <div class="section-content">
+            <div class="input-group">
+                <label for="chunkDownload">Download in chunks?</label>
+                <select id="chunkDownload" name="chunkDownload" onchange="toggleChunkOptions()">
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+            <div id="chunkOptions" style="display: none;">
+                <div class="input-group">
+                    <label for="numChunks">Number of chunks:</label>
+                    <input type="number" id="numChunks" name="numChunks" min="1" max="100" value="1">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="chunkSize">Chunk size (number of strings per chunk):</label>
+                <input type="number" id="chunkSize" name="chunkSize" min="1000" max="100000" value="10000">
+            </div>
+        </div>
+    </div>
+
     <button class="toggle-dark-mode" onclick="toggleDarkMode()">Toggle Dark Mode</button>
 
     <div id="guide" class="section">
         <h2 onclick="toggleSection(this)">Comprehensive Guide for Random String Generator</h2>
         <div class="section-content">
-            <!-- Guide content remains unchanged -->
+            <p>This random string generator allows you to generate custom strings based on templates. Here’s how to use the key features:</p>
+            <ul>
+                <li><b>Number of strings:</b> Specify how many strings you want to generate. You can generate up to 10 million strings.</li>
+                <li><b>Custom template:</b> Use special symbols to define the format of each string:
+                    <ul>
+                        <li>Use <code>¬</code> for random sequences. Length is defined in the range input.</li>
+                        <li>Use <code>%</code>, <code>~</code>, <code>$</code>, <code>@</code>, and <code>#</code> for inserting random characters from the custom character sets.</li>
+                    </ul>
+                </li>
+                <li><b>Custom characters:</b> Define the characters to be used for each symbol in the template.</li>
+                <li><b>Delimiter:</b> Choose a delimiter to separate generated strings.</li>
+                <li><b>File generation settings:</b> You can now download the file in chunks to avoid large memory usage. You can also set the chunk size.</li>
+            </ul>
         </div>
     </div>
 
@@ -219,62 +256,86 @@
             return customChars.length > 0 && customChars[0] !== '' ? customChars : ['a', 'b', 'c', '1', '2', '3']; // Default if empty
         }
 
-        // Generate random strings based on template and input
-        function generateRandomStrings() {
+        // Generate a random string based on the template and input
+        function generateRandomString(template, customChars, customTilde, customDollar, customAt, customHash, minLength, maxLength) {
+            const regex = /\(¬([%~@$#])\)|(%+|~+|\$+|@+|#+)/g;
+            template = template.replace(/\\n/g, '\n');
+
+            return template.replace(regex, (match, symbol) => {
+                let length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+                if (symbol) {
+                    if (symbol === '%') return getRandomString(length, customChars);
+                    if (symbol === '~') return getRandomString(length, customTilde);
+                    if (symbol === '$') return getRandomString(length, customDollar);
+                    if (symbol === '@') return getRandomString(length, customAt);
+                    if (symbol === '#') return getRandomString(length, customHash);
+                } else {
+                    let char = match[0];
+                    return getRandomString(match.length, eval(`custom${char.toUpperCase()}`));
+                }
+            });
+        }
+
+        // Incrementally generate random strings and write to a blob
+        async function downloadAsTxt() {
             const numStrings = parseInt(document.getElementById('numStrings').value);
-            let customTemplate = document.getElementById('customTemplate').value;
-            
-            const customChars = getCustomChars('customChars'); // Array from textarea
+            const customTemplate = document.getElementById('customTemplate').value;
+            const lengthRange = document.getElementById('lengthRange').value;
+            const [minLength, maxLength] = lengthRange.split('-').map(Number);
+
+            const customChars = getCustomChars('customChars');
             const customTilde = getCustomChars('customTilde');
             const customDollar = getCustomChars('customDollar');
             const customAt = getCustomChars('customAt');
             const customHash = getCustomChars('customHash');
 
-            const lengthRange = document.getElementById('lengthRange').value;
-            const [minLength, maxLength] = lengthRange.split('-').map(Number);
-            
-            // Regex to handle both ¬ and sequences of symbols
-            const regex = /\(¬([%~@$#])\)|(%+|~+|\$+|@+|#+)/g;
-            let allStrings = [];
+            const chunkDownload = document.getElementById('chunkDownload').value === "yes";
+            const chunkSize = parseInt(document.getElementById('chunkSize').value);
 
-            // Replace \n with actual newlines in the template
-            customTemplate = customTemplate.replace(/\\n/g, '\n');
-
-            for (let i = 0; i < numStrings; i++) {
-                let generatedString = customTemplate.replace(regex, (match, symbol) => {
-                    if (symbol) {
-                        // Handling ¬ symbol with length range
-                        let length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
-                        if (symbol === '%') return getRandomString(length, customChars);
-                        if (symbol === '~') return getRandomString(length, customTilde);
-                        if (symbol === '$') return getRandomString(length, customDollar);
-                        if (symbol === '@') return getRandomString(length, customAt);
-                        if (symbol === '#') return getRandomString(length, customHash);
-                    } else {
-                        // Handling sequence of symbols without ¬
-                        let length = match.length;
-                        let symbol = match[0];
-                        if (symbol === '%') return getRandomString(length, customChars);
-                        if (symbol === '~') return getRandomString(length, customTilde);
-                        if (symbol === '$') return getRandomString(length, customDollar);
-                        if (symbol === '@') return getRandomString(length, customAt);
-                        if (symbol === '#') return getRandomString(length, customHash);
-                    }
-                });
-                allStrings.push(generatedString);
+            let numChunks = 1;
+            if (chunkDownload) {
+                numChunks = parseInt(document.getElementById('numChunks').value);
             }
 
-            return allStrings.join('\n');
+            const CHUNK_SIZE = Math.min(chunkSize, numStrings);  // Number of strings per chunk
+            let chunks = [];
+
+            for (let i = 0; i < numStrings; i += CHUNK_SIZE) {
+                let chunkStrings = [];
+                const limit = Math.min(CHUNK_SIZE, numStrings - i);
+
+                for (let j = 0; j < limit; j++) {
+                    let randomString = generateRandomString(customTemplate, customChars, customTilde, customDollar, customAt, customHash, minLength, maxLength);
+                    chunkStrings.push(randomString);
+                }
+
+                chunks.push(chunkStrings.join('\n'));
+                await new Promise(resolve => setTimeout(resolve, 0));  // Yield control to avoid freezing
+
+                // Download chunk
+                if (chunkDownload && chunks.length >= numChunks) {
+                    const blob = new Blob(chunks, { type: 'text/plain' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `random_strings_part_${Math.ceil(i / CHUNK_SIZE) + 1}.txt`;
+                    link.click();
+                    chunks = []; // Reset for the next chunk
+                }
+            }
+
+            if (!chunkDownload) {
+                const blob = new Blob(chunks, { type: 'text/plain' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'random_strings.txt';
+                link.click();
+            }
         }
 
-        // Download the generated strings as a .txt file
-        function downloadAsTxt() {
-            const allStrings = generateRandomStrings();
-            const blob = new Blob([allStrings], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'random_strings.txt';
-            link.click();
+        // Show/Hide chunk options based on selection
+        function toggleChunkOptions() {
+            const chunkDownload = document.getElementById('chunkDownload').value === 'yes';
+            document.getElementById('chunkOptions').style.display = chunkDownload ? 'block' : 'none';
         }
 
         // Save and load user input (dark mode settings, etc.)
