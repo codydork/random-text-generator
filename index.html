@@ -180,6 +180,22 @@
             <textarea id="customHash" name="customHash" placeholder="0\n1\n2\n3\n4\n5"></textarea>
         </div>
 
+        <!-- New symbols input -->
+        <div class="input-group">
+            <label for="customAsterisk">Custom characters for * (one per line):</label>
+            <textarea id="customAsterisk" name="customAsterisk" placeholder="a\nb\nc\n1\n2\n3"></textarea>
+        </div>
+
+        <div class="input-group">
+            <label for="customCaret">Custom characters for ^ (one per line):</label>
+            <textarea id="customCaret" name="customCaret" placeholder="x\ny\nz\n7\n8\n9"></textarea>
+        </div>
+
+        <div class="input-group">
+            <label for="customSlash">Custom characters for / (one per line):</label>
+            <textarea id="customSlash" name="customSlash" placeholder="p\nq\nr\ns\nt\nu"></textarea>
+        </div>
+
         <div class="input-group">
             <label for="delimiter">Delimiter:</label>
             <input type="text" id="delimiter" name="delimiter" placeholder=",">
@@ -229,11 +245,11 @@
             const customDollar = getCustomChars('customDollar');
             const customAt = getCustomChars('customAt');
             const customHash = getCustomChars('customHash');
-
-            // Adding the new symbols
-            const customAsterisk = ['*']; 
-            const customCaret = ['^']; 
-            const customSlash = ['/']; 
+            
+            // Adding the new symbols' custom character sets
+            const customAsterisk = getCustomChars('customAsterisk');
+            const customCaret = getCustomChars('customCaret');
+            const customSlash = getCustomChars('customSlash');
 
             const lengthRange = document.getElementById('lengthRange').value;
             const [minLength, maxLength] = lengthRange.split('-').map(Number);
