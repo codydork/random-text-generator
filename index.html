@@ -294,33 +294,43 @@
             return allStrings.join('\n');
         }
 
-        // Helper to download the generated strings in chunks
-        function downloadAsTxt() {
-            const numStrings = parseInt(document.getElementById('numStrings').value);
-            const allStrings = generateRandomStrings();
+       <script>
+    // Generate and download strings in batches if over 5 million
+    function downloadAsTxt() {
+        const numStrings = parseInt(document.getElementById('numStrings').value);
+        const allStrings = generateRandomStrings();
+        const delimiter = document.getElementById('delimiter').value || '\n';
+        
+        // Split into 1 million string files if total exceeds 5 million
+        const batchSize = 1000000;  // 1 million strings per file
+        if (numStrings > 5000000) {
+            const totalBatches = Math.ceil(numStrings / batchSize);
+            let startIndex = 0;
 
-            // If over 1 million strings, split into chunks of 50MB
-            const chunkSize = 50 * 1024 * 1024; // 50MB in bytes
-            const totalSize = new Blob([allStrings]).size;
+            for (let i = 0; i < totalBatches; i++) {
+                const batchStrings = allStrings.slice(startIndex, startIndex + batchSize).join(delimiter);
+                startIndex += batchSize;
 
-            if (numStrings > 1000000 || totalSize > chunkSize) {
-                const numberOfChunks = Math.ceil(totalSize / chunkSize);
-                for (let i = 0; i < numberOfChunks; i++) {
-                    const chunk = allStrings.slice(i * chunkSize, (i + 1) * chunkSize);
-                    const blob = new Blob([chunk], { type: 'text/plain' });
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(blob);
-                    link.download = `random_strings_part_${i + 1}.txt`;
-                    link.click();
-                }
-            } else {
-                const blob = new Blob([allStrings], { type: 'text/plain' });
+                // Create a Blob for each batch
+                const blob = new Blob([batchStrings], { type: 'text/plain' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = 'random_strings.txt';
+                link.download = `random_strings_part_${i + 1}.txt`;
+
+                // Auto-download each file after creation
                 link.click();
             }
+        } else {
+            // Single download if under 5 million strings
+            const blob = new Blob([allStrings.join(delimiter)], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'random_strings.txt';
+            link.click();
         }
+    }
+</script>
+
 
         // Save and load user input (dark mode settings, etc.)
         window.onload = () => {
