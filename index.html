@@ -295,41 +295,39 @@
         }
 
        <script>
-     // Helper to download generated strings in batches
-        async function downloadAsTxt() {
-            const numStrings = parseInt(document.getElementById('numStrings').value);
-            const allStrings = generateRandomStrings().split('\n');
-            const delimiter = document.getElementById('delimiter').value || '\n';
-            
-            const batchSize = 1000000;  // 1 million strings per file
-            const totalBatches = Math.floor(numStrings / batchSize);
-            let startIndex = 0;
+    function downloadAsTxt() {
+        const numStrings = parseInt(document.getElementById('numStrings').value);
+        const allStrings = generateRandomStrings().split('\n'); // Generate strings as an array
+        const delimiter = document.getElementById('delimiter').value || '\n';
+        const batchSize = 1000000;  // 1 million strings per file
 
-            // Function to handle downloading a batch with delay
-            async function downloadBatch(batchStrings, index) {
-                const blob = new Blob([batchStrings.join(delimiter)], { type: 'text/plain' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = `random_strings_part_${index + 1}.txt`;
-                link.click();
+        let currentBatch = 0;
+        const totalBatches = Math.ceil(numStrings / batchSize);
 
-                setTimeout(() => URL.revokeObjectURL(link.href), 100);  // Clean up URL
-                await new Promise(resolve => setTimeout(resolve, 200));  // 200ms delay
-            }
+        function downloadBatch() {
+            if (currentBatch >= totalBatches) return;  // Stop if all batches are downloaded
 
-            // Download each full batch of 1 million strings
-            for (let i = 0; i < totalBatches; i++) {
-                const batchStrings = allStrings.slice(startIndex, startIndex + batchSize);
-                startIndex += batchSize;
-                await downloadBatch(batchStrings, i);  // Download batch with delay
-            }
+            // Calculate start and end index for this batch, handle leftover strings
+            const start = currentBatch * batchSize;
+            const end = Math.min(start + batchSize, numStrings);  // Ends at numStrings if leftover batch
 
-            // Handle any remaining strings less than 1 million in the final file
-            const remainingStrings = allStrings.slice(startIndex);
-            if (remainingStrings.length > 0) {
-                await downloadBatch(remainingStrings, totalBatches);  // Download final batch
-            }
+            const batchStrings = allStrings.slice(start, end);
+
+            // Create and download the current batch as a file
+            const blob = new Blob([batchStrings.join(delimiter)], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `random_strings_part_${currentBatch + 1}.txt`;
+            link.click();
+
+            // Free memory after download and schedule next batch
+            URL.revokeObjectURL(link.href);
+            currentBatch++;
+            setTimeout(downloadBatch, 200);  // Small delay for smooth processing
         }
+
+        downloadBatch();  // Start downloading batches
+    }
 </script>
 
 
