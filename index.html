@@ -295,40 +295,41 @@
         }
 
        <script>
-    // Generate and download strings in batches if over 5 million
-    function downloadAsTxt() {
-        const numStrings = parseInt(document.getElementById('numStrings').value);
-        const allStrings = generateRandomStrings();
-        const delimiter = document.getElementById('delimiter').value || '\n';
-        
-        // Split into 1 million string files if total exceeds 5 million
-        const batchSize = 1000000;  // 1 million strings per file
-        if (numStrings > 5000000) {
-            const totalBatches = Math.ceil(numStrings / batchSize);
+     // Helper to download generated strings in batches
+        async function downloadAsTxt() {
+            const numStrings = parseInt(document.getElementById('numStrings').value);
+            const allStrings = generateRandomStrings().split('\n');
+            const delimiter = document.getElementById('delimiter').value || '\n';
+            
+            const batchSize = 1000000;  // 1 million strings per file
+            const totalBatches = Math.floor(numStrings / batchSize);
             let startIndex = 0;
 
-            for (let i = 0; i < totalBatches; i++) {
-                const batchStrings = allStrings.slice(startIndex, startIndex + batchSize).join(delimiter);
-                startIndex += batchSize;
-
-                // Create a Blob for each batch
-                const blob = new Blob([batchStrings], { type: 'text/plain' });
+            // Function to handle downloading a batch with delay
+            async function downloadBatch(batchStrings, index) {
+                const blob = new Blob([batchStrings.join(delimiter)], { type: 'text/plain' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = `random_strings_part_${i + 1}.txt`;
-
-                // Auto-download each file after creation
+                link.download = `random_strings_part_${index + 1}.txt`;
                 link.click();
+
+                setTimeout(() => URL.revokeObjectURL(link.href), 100);  // Clean up URL
+                await new Promise(resolve => setTimeout(resolve, 200));  // 200ms delay
             }
-        } else {
-            // Single download if under 5 million strings
-            const blob = new Blob([allStrings.join(delimiter)], { type: 'text/plain' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'random_strings.txt';
-            link.click();
+
+            // Download each full batch of 1 million strings
+            for (let i = 0; i < totalBatches; i++) {
+                const batchStrings = allStrings.slice(startIndex, startIndex + batchSize);
+                startIndex += batchSize;
+                await downloadBatch(batchStrings, i);  // Download batch with delay
+            }
+
+            // Handle any remaining strings less than 1 million in the final file
+            const remainingStrings = allStrings.slice(startIndex);
+            if (remainingStrings.length > 0) {
+                await downloadBatch(remainingStrings, totalBatches);  // Download final batch
+            }
         }
-    }
 </script>
 
 
