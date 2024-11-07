@@ -140,7 +140,6 @@
     <h1>Random String Generator</h1>
     
     <div class="container">
-        <!-- Input fields -->
         <div class="input-group">
             <label for="numStrings">Number of strings to generate:</label>
             <input type="number" id="numStrings" name="numStrings" min="1" max="10000000" value="1">
@@ -207,41 +206,19 @@
 
     <button class="toggle-dark-mode" onclick="toggleDarkMode()">Toggle Dark Mode</button>
 
+    <div id="guide" class="section">
+        <h2 onclick="toggleSection(this)">Comprehensive Guide for Random String Generator</h2>
+        <div class="section-content">
+            <!-- Guide content remains unchanged -->
+        </div>
+    </div>
+
     <script>
-        // Toggle Dark Mode and save state
+        // Toggle Dark Mode
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             localStorage.setItem('darkMode', document.body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
         }
-
-        // Save all user inputs
-        function saveUserInputs() {
-            const inputs = document.querySelectorAll('input[type="number"], input[type="text"], textarea');
-            inputs.forEach(input => {
-                localStorage.setItem(input.id, input.value);
-            });
-        }
-
-        // Load user inputs, including dark mode
-        function loadUserInputs() {
-            const inputs = document.querySelectorAll('input[type="number"], input[type="text"], textarea');
-            inputs.forEach(input => {
-                const savedValue = localStorage.getItem(input.id);
-                if (savedValue !== null) {
-                    input.value = savedValue;
-                }
-            });
-
-            if (localStorage.getItem('darkMode') === 'enabled') {
-                document.body.classList.add('dark-mode');
-            }
-        }
-
-        // Run on load to retrieve stored values
-        window.onload = loadUserInputs;
-        
-        // Save input settings before unload
-        window.onbeforeunload = saveUserInputs;
 
         // Utility to generate random strings from a character array
         function getRandomString(length, charactersArray) {
@@ -252,59 +229,124 @@
             return result;
         }
 
-        // Generate random strings based on user input
+        // Retrieve and split textarea input into an array of custom characters (split by new lines)
+        function getCustomChars(id) {
+            const customChars = document.getElementById(id).value.trim().split('\n');
+            return customChars.length > 0 && customChars[0] !== '' ? customChars : ['a', 'b', 'c', '1', '2', '3']; // Default if empty
+        }
+
+        // Generate random strings based on template and input
         function generateRandomStrings() {
             const numStrings = parseInt(document.getElementById('numStrings').value);
-            const customTemplate = document.getElementById('customTemplate').value || '(¬%)';
-            const delimiter = document.getElementById('delimiter').value || '\n';
-            const [minLength, maxLength] = document.getElementById('lengthRange').value.split('-').map(Number);
+            let customTemplate = document.getElementById('customTemplate').value;
             
-            const allStrings = [];
+            const customChars = getCustomChars('customChars'); // Array from textarea
+            const customTilde = getCustomChars('customTilde');
+            const customDollar = getCustomChars('customDollar');
+            const customAt = getCustomChars('customAt');
+            const customHash = getCustomChars('customHash');
+            
+            // Adding the new symbols' custom character sets
+            const customAsterisk = getCustomChars('customAsterisk');
+            const customCaret = getCustomChars('customCaret');
+            const customSlash = getCustomChars('customSlash');
+
+            const lengthRange = document.getElementById('lengthRange').value;
+            const [minLength, maxLength] = lengthRange.split('-').map(Number);
+            
+            // Updated regex to handle ¬ and new symbols inside brackets
+            const regex = /\(¬([%~@$#*^\/])\)|(%+|~+|\$+|@+|#+|\*+|\^+|\/+)/g;
+            let allStrings = [];
+
+            // Replace \n with actual newlines in the template
+            customTemplate = customTemplate.replace(/\\n/g, '\n');
 
             for (let i = 0; i < numStrings; i++) {
-                let generatedString = customTemplate.replace(/\(¬%\)/g, () => {
-                    const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
-                    return getRandomString(length, 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789');
+                let generatedString = customTemplate.replace(regex, (match, symbol) => {
+                    if (symbol) {
+                        // Handling ¬ symbol with length range
+                        let length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+                        if (symbol === '%') return getRandomString(length, customChars);
+                        if (symbol === '~') return getRandomString(length, customTilde);
+                        if (symbol === '$') return getRandomString(length, customDollar);
+                        if (symbol === '@') return getRandomString(length, customAt);
+                        if (symbol === '#') return getRandomString(length, customHash);
+                        if (symbol === '*') return getRandomString(length, customAsterisk);
+                        if (symbol === '^') return getRandomString(length, customCaret);
+                        if (symbol === '/') return getRandomString(length, customSlash);
+                    } else {
+                        // Handling sequences without ¬
+                        let length = match.length;
+                        let symbol = match[0];
+                        if (symbol === '%') return getRandomString(length, customChars);
+                        if (symbol === '~') return getRandomString(length, customTilde);
+                        if (symbol === '$') return getRandomString(length, customDollar);
+                        if (symbol === '@') return getRandomString(length, customAt);
+                        if (symbol === '#') return getRandomString(length, customHash);
+                        if (symbol === '*') return getRandomString(length, customAsterisk);
+                        if (symbol === '^') return getRandomString(length, customCaret);
+                        if (symbol === '/') return getRandomString(length, customSlash);
+                    }
                 });
                 allStrings.push(generatedString);
             }
 
-            return allStrings.join(delimiter);
+            return allStrings.join('\n');
         }
 
         // Helper to download the generated strings in chunks
         function downloadAsTxt() {
             const numStrings = parseInt(document.getElementById('numStrings').value);
-            const allStrings = generateRandomStrings().split('\n'); // Generate strings as an array
-            const delimiter = document.getElementById('delimiter').value || '\n';
-            const batchSize = 1000000;  // 1 million strings per file
+            const allStrings = generateRandomStrings();
 
-            let currentBatch = 0;
-            const totalBatches = Math.ceil(numStrings / batchSize);
+            // If over 1 million strings, split into chunks of 50MB
+            const chunkSize = 50 * 1024 * 1024; // 50MB in bytes
+            const totalSize = new Blob([allStrings]).size;
 
-            function downloadBatch() {
-                if (currentBatch >= totalBatches) return;  // Stop if all batches are downloaded
-
-                // Calculate start and end index for this batch, handle leftover strings
-                const start = currentBatch * batchSize;
-                const end = Math.min(start + batchSize, numStrings);  // Ends at numStrings if leftover batch
-
-                const batchStrings = allStrings.slice(start, end);
-
-                // Create and download the current batch as a file
-                const blob = new Blob([batchStrings.join(delimiter)], { type: 'text/plain' });
+            if (numStrings > 1000000 || totalSize > chunkSize) {
+                const numberOfChunks = Math.ceil(totalSize / chunkSize);
+                for (let i = 0; i < numberOfChunks; i++) {
+                    const chunk = allStrings.slice(i * chunkSize, (i + 1) * chunkSize);
+                    const blob = new Blob([chunk], { type: 'text/plain' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = `random_strings_part_${i + 1}.txt`;
+                    link.click();
+                }
+            } else {
+                const blob = new Blob([allStrings], { type: 'text/plain' });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
-                link.download = `random_strings_part_${currentBatch + 1}.txt`;
+                link.download = 'random_strings.txt';
                 link.click();
-
-                // Free memory after download and schedule next batch
-                URL.revokeObjectURL(link.href);
-                currentBatch++;
-                setTimeout(downloadBatch, 200);  // Small delay for smooth processing
             }
+        }
 
-            downloadBatch();  // Start downloading batches
+        // Save and load user input (dark mode settings, etc.)
+        window.onload = () => {
+            loadUserInputs();
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                document.body.classList.add('dark-mode');
+            }
+        };
+
+        window.onbeforeunload = saveUserInputs;
+
+        function saveUserInputs() {
+            const inputs = document.querySelectorAll('input[type="number"], input[type="text"], textarea');
+            inputs.forEach(input => {
+                localStorage.setItem(input.id, input.value);
+            });
+        }
+
+        function loadUserInputs() {
+            const inputs = document.querySelectorAll('input[type="number"], input[type="text"], textarea');
+            inputs.forEach(input => {
+                const savedValue = localStorage.getItem(input.id);
+                if (savedValue !== null) {
+                    input.value = savedValue;
+                }
+            });
         }
     </script>
 </body>
